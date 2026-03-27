@@ -41,3 +41,11 @@ PYTHONPATH=src python3 -m squeeze.cli analyze-tracking --csv recommendations.csv
 - `scripts/run_daily_scan.sh`
 - `scripts/upload_exports_to_oss.sh`
 - `scripts/prune_old_exports.sh`
+
+若你偏好 `systemd` 而不是 `cron`，專案也附上：
+- `deploy/systemd/squeeze-cn-scan.service`
+- `deploy/systemd/squeeze-cn-scan.timer`
+- `deploy/systemd/squeeze-cn-upload-exports.service`
+- `deploy/systemd/squeeze-cn-upload-exports.timer`
+- `deploy/systemd/squeeze-cn-prune-exports.service`
+- `deploy/systemd/squeeze-cn-prune-exports.timer`

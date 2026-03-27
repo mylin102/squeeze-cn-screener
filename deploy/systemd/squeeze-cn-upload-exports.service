@@ -1,0 +1,13 @@
+[Unit]
+Description=Upload Squeeze CN exports to OSS
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/squeeze-cn-screener
+EnvironmentFile=/opt/squeeze-cn-screener/.env
+ExecStart=/opt/squeeze-cn-screener/scripts/upload_exports_to_oss.sh
+
+[Install]
+WantedBy=multi-user.target

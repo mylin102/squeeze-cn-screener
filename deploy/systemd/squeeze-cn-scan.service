@@ -1,0 +1,13 @@
+[Unit]
+Description=Squeeze CN daily scan job
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/squeeze-cn-screener
+EnvironmentFile=/opt/squeeze-cn-screener/.env
+ExecStart=/opt/squeeze-cn-screener/scripts/run_daily_scan.sh
+
+[Install]
+WantedBy=multi-user.target

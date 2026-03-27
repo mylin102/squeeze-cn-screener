@@ -1,0 +1,10 @@
+[Unit]
+Description=Prune old Squeeze CN exports on weekdays
+
+[Timer]
+OnCalendar=Mon..Fri 18:40
+Persistent=true
+Unit=squeeze-cn-prune-exports.service
+
+[Install]
+WantedBy=timers.target

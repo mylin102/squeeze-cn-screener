@@ -67,6 +67,8 @@ export OSS_PREFIX=squeeze-cn/exports
 export OSSUTIL_BIN=/usr/local/bin/ossutil
 ```
 
+你也可以直接從 [.env.example](/Users/mingyenlin/Documents/GWork/mylin102/squeeze-cn-screener/.env.example) 複製成 `/opt/squeeze-cn-screener/.env`。
+
 ## 每日掃描
 
 手動執行：
@@ -119,6 +121,29 @@ RETENTION_DAYS=14 ./scripts/prune_old_exports.sh
 25 18 * * 1-5 cd /opt/squeeze-cn-screener && OSS_BUCKET=your-oss-bucket ./scripts/upload_exports_to_oss.sh
 40 18 * * 1-5 cd /opt/squeeze-cn-screener && RETENTION_DAYS=30 ./scripts/prune_old_exports.sh
 ```
+
+## systemd 方案
+
+如果你不想用 `cron`，也可以改用 repo 內建的 `systemd` 範本：
+
+- [squeeze-cn-scan.service](/Users/mingyenlin/Documents/GWork/mylin102/squeeze-cn-screener/deploy/systemd/squeeze-cn-scan.service)
+- [squeeze-cn-scan.timer](/Users/mingyenlin/Documents/GWork/mylin102/squeeze-cn-screener/deploy/systemd/squeeze-cn-scan.timer)
+- [squeeze-cn-upload-exports.service](/Users/mingyenlin/Documents/GWork/mylin102/squeeze-cn-screener/deploy/systemd/squeeze-cn-upload-exports.service)
+- [squeeze-cn-upload-exports.timer](/Users/mingyenlin/Documents/GWork/mylin102/squeeze-cn-screener/deploy/systemd/squeeze-cn-upload-exports.timer)
+- [squeeze-cn-prune-exports.service](/Users/mingyenlin/Documents/GWork/mylin102/squeeze-cn-screener/deploy/systemd/squeeze-cn-prune-exports.service)
+- [squeeze-cn-prune-exports.timer](/Users/mingyenlin/Documents/GWork/mylin102/squeeze-cn-screener/deploy/systemd/squeeze-cn-prune-exports.timer)
+
+安裝方式：
+
+```bash
+sudo cp deploy/systemd/*.service deploy/systemd/*.timer /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now squeeze-cn-scan.timer
+sudo systemctl enable --now squeeze-cn-upload-exports.timer
+sudo systemctl enable --now squeeze-cn-prune-exports.timer
+```
+
+這組 service 會從 `/opt/squeeze-cn-screener/.env` 讀取環境變數。
 
 ## 日誌與監控
 

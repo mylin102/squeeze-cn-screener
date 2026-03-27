@@ -1,0 +1,11 @@
+[Unit]
+Description=Prune old Squeeze CN exports
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/squeeze-cn-screener
+EnvironmentFile=/opt/squeeze-cn-screener/.env
+ExecStart=/opt/squeeze-cn-screener/scripts/prune_old_exports.sh
+
+[Install]
+WantedBy=multi-user.target

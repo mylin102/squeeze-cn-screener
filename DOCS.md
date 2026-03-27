@@ -79,6 +79,8 @@ PYTHONPATH=src python3 -m squeeze.cli analyze-tracking --csv recommendations.csv
 *   `scripts/run_daily_scan.sh`: 中國雲每日掃描入口。
 *   `scripts/upload_exports_to_oss.sh`: 匯出結果同步到 OSS。
 *   `scripts/prune_old_exports.sh`: 清理過舊本機匯出目錄。
+*   `deploy/systemd/`: `systemd` 的 service/timer 範本。
+*   `.env.example`: ECS 環境變數範本。
 *   `recommendations.csv`: 追蹤資料庫 (固定追蹤最新 25 檔)。
 
 ## 中國雲部署建議

@@ -1,0 +1,10 @@
+[Unit]
+Description=Run Squeeze CN daily scan on weekdays
+
+[Timer]
+OnCalendar=Mon..Fri 18:15
+Persistent=true
+Unit=squeeze-cn-scan.service
+
+[Install]
+WantedBy=timers.target

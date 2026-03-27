@@ -1,0 +1,10 @@
+[Unit]
+Description=Upload Squeeze CN exports to OSS on weekdays
+
+[Timer]
+OnCalendar=Mon..Fri 18:25
+Persistent=true
+Unit=squeeze-cn-upload-exports.service
+
+[Install]
+WantedBy=timers.target
