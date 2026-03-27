@@ -16,6 +16,32 @@ app = typer.Typer(help="Squeeze CN Screener for China Market")
 console = Console()
 
 
+def _signal_score(signal: str) -> int:
+    if signal == "強烈買入 (爆發)":
+        return 3
+    if signal == "買入 (動能增強)":
+        return 2
+    if signal == "觀察 (跌勢收斂)":
+        return 1
+    return 0
+
+
+def _attach_pattern_flags(results, houyi_results, whale_results):
+    houyi_map = {r["ticker"]: r for r in houyi_results if r.get("is_houyi")}
+    whale_map = {r["ticker"]: r for r in whale_results if r.get("is_whale")}
+    enriched = []
+    for result in results:
+        ticker = result.get("ticker")
+        has_houyi = ticker in houyi_map
+        has_whale = ticker in whale_map
+        enriched_result = dict(result)
+        enriched_result["has_houyi"] = has_houyi
+        enriched_result["has_whale"] = has_whale
+        enriched_result["composite_score"] = _signal_score(result.get("Signal", "")) + (1 if has_houyi else 0) + (2 if has_whale else 0)
+        enriched.append(enriched_result)
+    return enriched
+
+
 def _safe_chart_stem(ticker: str, name: str) -> str:
     base = f"{ticker.split('.')[0]}_{name or 'unknown'}"
     for char in '/\\:*?"<>|':
@@ -104,13 +130,30 @@ def scan(
     with console.status("[bold green]Analyzing patterns...[/bold green]"):
         mkt_cap_val = min_mkt_cap * 1e9 if min_mkt_cap else None
         results = scanner.scan(config['fn'], min_mkt_cap=mkt_cap_val, min_avg_volume=min_volume, min_score=min_score)
-    
+
+    extra_sections = {}
+    if pattern == "squeeze":
+        with console.status("[bold green]Checking Houyi/Whale matches...[/bold green]"):
+            houyi_results = scanner.scan(detect_houyi_shooting_sun, min_mkt_cap=mkt_cap_val, min_avg_volume=min_volume, min_score=min_score)
+            whale_results = scanner.scan(detect_whale_trading, min_mkt_cap=mkt_cap_val, min_avg_volume=min_volume, min_score=min_score)
+        matched = _attach_pattern_flags([r for r in results if config['filter'](r)], houyi_results, whale_results)
+        extra_sections = {
+            "houyi": sorted([r for r in houyi_results if r.get("is_houyi")], key=lambda x: x.get("rally_pct", 0), reverse=True),
+            "whale": sorted([r for r in whale_results if r.get("is_whale")], key=lambda x: x.get("weekly_momentum", 0), reverse=True),
+            "priority": sorted(
+                [r for r in matched if r.get("composite_score", 0) > 0],
+                key=lambda x: (x.get("composite_score", 0), x.get("momentum", 0)),
+                reverse=True,
+            ),
+        }
+
     if min_price is not None:
         results = [r for r in results if r.get('Close', 0) >= min_price]
     if max_price is not None:
         results = [r for r in results if r.get('Close', 0) <= max_price]
 
-    matched = [r for r in results if config['filter'](r)]
+    if pattern != "squeeze":
+        matched = [r for r in results if config['filter'](r)]
     matched = sorted(matched, key=config['sort_key'], reverse=True)
     
     table = Table(title=f"{config['title']} ({len(matched)} matches)")
@@ -162,6 +205,7 @@ def scan(
                 base_dir,
                 tracking_buys=tracking_buys,
                 tracking_sells=tracking_sells,
+                extra_sections=extra_sections,
             )
         
         if plot:
@@ -192,7 +236,7 @@ def scan(
 
         email_notifier = EmailNotifier()
         exporter = ReportExporter()
-        html_report = exporter.render_html_summary(buy_results=today_buys, sell_results=today_sells, tracking_buys=tracking_buys, tracking_sells=tracking_sells)
+        html_report = exporter.render_html_summary(buy_results=today_buys, sell_results=today_sells, tracking_buys=tracking_buys, tracking_sells=tracking_sells, extra_sections=extra_sections)
         subject = f"Squeeze CN Scan Report ({pattern}) - {pd.Timestamp.now().strftime('%Y-%m-%d')}"
         
         if email_notifier.send_email(subject, html_report, is_html=True, attachments=chart_paths):

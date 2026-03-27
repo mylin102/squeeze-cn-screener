@@ -3,6 +3,7 @@ import mplfinance as mpf
 import pandas_ta as ta
 import numpy as np
 import os
+import matplotlib as mpl
 
 def plot_ticker(ticker_df: pd.DataFrame, ticker_symbol: str, output_path: str):
     """
@@ -69,11 +70,16 @@ def plot_ticker(ticker_df: pd.DataFrame, ticker_symbol: str, output_path: str):
     os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
     
     # 8. Generate Final Plot
-    mpf.plot(plot_df, type='candle', style='charles', addplot=plots, 
-             title=f"\n{ticker_symbol} - Squeeze Analysis (1yr)", 
-             savefig=output_path, volume=True, 
-             panel_ratios=(6, 2, 1), 
-             datetime_format='%Y-%m',
-             xrotation=0,
-             show_nontrading=False,
-             tight_layout=True)
+    with mpl.rc_context({
+        "font.family": "sans-serif",
+        "font.sans-serif": ["Heiti TC", "Arial Unicode MS", "DejaVu Sans"],
+        "axes.unicode_minus": False,
+    }):
+        mpf.plot(plot_df, type='candle', style='charles', addplot=plots, 
+                 title=f"\n{ticker_symbol} - Squeeze Analysis (1yr)", 
+                 savefig=output_path, volume=True, 
+                 panel_ratios=(6, 2, 1), 
+                 datetime_format='%Y-%m',
+                 xrotation=0,
+                 show_nontrading=False,
+                 tight_layout=True)
