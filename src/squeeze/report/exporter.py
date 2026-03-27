@@ -1,5 +1,6 @@
 import csv
 import json
+import tomllib
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import List, Dict, Any, Optional
@@ -27,6 +28,14 @@ class ReportExporter:
     def _get_china_now(self) -> datetime:
         """Returns the current time in China Standard Time (UTC+8)."""
         return datetime.now(timezone.utc).astimezone(timezone(timedelta(hours=8)))
+
+    def _get_app_version(self) -> str:
+        pyproject_path = Path(__file__).resolve().parents[3] / "pyproject.toml"
+        try:
+            with open(pyproject_path, "rb") as f:
+                return tomllib.load(f)["project"]["version"]
+        except Exception:
+            return "unknown"
 
     def export(self, results: List[Dict[str, Any]], output_base_dir: Path) -> Dict[str, Path]:
         """
@@ -113,6 +122,7 @@ class ReportExporter:
         top_sells = sorted(sell_results, key=lambda x: x.get('momentum', 0), reverse=False)[:10]
         render_data = {
             "date": self._get_china_now().strftime("%Y-%m-%d %H:%M:%S") + " (CST)",
+            "app_version": self._get_app_version(),
             "buy_results": [self._format_result(r) for r in top_buys],
             "buy_count": len(buy_results),
             "sell_results": [self._format_result(r) for r in top_sells],
@@ -140,6 +150,7 @@ class ReportExporter:
         
         render_data = {
             "date": self._get_china_now().strftime("%Y-%m-%d %H:%M:%S") + " (CST)",
+            "app_version": self._get_app_version(),
             "buy_results": [self._format_result(r) for r in top_buys],
             "buy_count": len(buy_results),
             "sell_results": [self._format_result(r) for r in top_sells],
