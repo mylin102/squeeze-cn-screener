@@ -36,3 +36,4 @@ include = ["squeeze*"]
 
 [tool.setuptools.package-data]
 "squeeze.report.templates" = ["*.j2"]
+"squeeze.data" = ["cn_seed_tickers.json"]

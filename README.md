@@ -2,6 +2,10 @@
 
 專為中國 A 股市場設計的自動化標的篩選工具，採用 Squeeze Momentum 擠壓動能邏輯與進階形態識別技術。對外命名與美股版 `squeeze-us`、台股版 `squeeze-tw` 對齊，中國市場命令統一為 `squeeze-cn`。
 
+Ticker universe 採雙來源模式：
+- 主來源：Eastmoney 即時股票列表
+- 次來源：repo 內建的 A 股快照，供 DNS 或外網失敗時 fallback
+
 ## 核心功能
 - **高效能掃描**：採用混合多執行緒 (I/O) 與多處理器 (CPU) 引擎，快速掃描中國 A 股 (上海主板、科創板、深圳主板、創業板)。
 - **進階形態識別**：支援 TTM Squeeze、后羿射日 (Houyi Shooting Sun) 及大鯨魚交易 (Whale Trading) 形態。

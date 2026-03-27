@@ -3,6 +3,11 @@
 ## 專案概述
 本專案是一個基於 Python 的自動化股市掃描系統，旨在透過 Squeeze Momentum (擠壓動能) 指標及進階形態識別，篩選出具備爆發潛力的交易標的。支援中國 A 股市場，涵蓋上海主板、科創板、深圳主板與創業板。
 
+## Ticker Universe Source
+*   **Primary**: Eastmoney public quote list API.
+*   **Secondary**: Bundled China A-share snapshot shipped in the package.
+*   **Fallback Behavior**: If the primary source fails due to DNS/network issues, the screener falls back to the bundled snapshot so local scans can still run.
+
 ## 技術指標定義
 
 ### 1. Squeeze Momentum (TTM Squeeze)
