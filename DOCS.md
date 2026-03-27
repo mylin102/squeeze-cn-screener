@@ -73,7 +73,19 @@ PYTHONPATH=src python3 -m squeeze.cli analyze-tracking --csv recommendations.csv
 ```
 
 ## 檔案結構
-*   `src/squeeze/data/`: 數據抓取邏輯 (yfinance, ISIN)。
+*   `src/squeeze/data/`: 數據抓取邏輯 (Eastmoney, yfinance, fallback snapshot)。
 *   `src/squeeze/engine/`: 核心運算引擎 (Indicators, Patterns)。
 *   `src/squeeze/report/`: 報告生成與通知 (Jinja2, SMTP, LINE)。
+*   `scripts/run_daily_scan.sh`: 中國雲每日掃描入口。
+*   `scripts/upload_exports_to_oss.sh`: 匯出結果同步到 OSS。
+*   `scripts/prune_old_exports.sh`: 清理過舊本機匯出目錄。
 *   `recommendations.csv`: 追蹤資料庫 (固定追蹤最新 25 檔)。
+
+## 中國雲部署建議
+第一版建議使用：
+*   `ECS`: 執行 Python 專案與排程。
+*   `cron`: 觸發每日掃描與上傳流程。
+*   `OSS`: 保存 `exports/YYYY-MM-DD/...` 的歷史輸出。
+*   `SLS`: 收集掃描日誌與錯誤訊息。
+
+完整部署步驟與環境變數定義見 [DEPLOY_CN.md](/Users/mingyenlin/Documents/GWork/mylin102/squeeze-cn-screener/DEPLOY_CN.md)。

@@ -33,3 +33,11 @@ squeeze-cn scan --export --plot --notify
 python3 scripts/analyze_tracking.py --csv recommendations.csv
 PYTHONPATH=src python3 -m squeeze.cli analyze-tracking --csv recommendations.csv
 ```
+
+## 中國雲部署
+建議第一版先用 `ECS + cron + OSS + SLS`，把 daily scan、匯出、上傳與日誌拆開，方便除錯與維運。部署細節見 [DEPLOY_CN.md](/Users/mingyenlin/Documents/GWork/mylin102/squeeze-cn-screener/DEPLOY_CN.md)。
+
+專案已附上可直接調整的部署腳本：
+- `scripts/run_daily_scan.sh`
+- `scripts/upload_exports_to_oss.sh`
+- `scripts/prune_old_exports.sh`
