@@ -37,7 +37,13 @@ class ReportExporter:
         except Exception:
             return "unknown"
 
-    def export(self, results: List[Dict[str, Any]], output_base_dir: Path) -> Dict[str, Path]:
+    def export(
+        self,
+        results: List[Dict[str, Any]],
+        output_base_dir: Path,
+        tracking_buys: Optional[List[Dict[str, Any]]] = None,
+        tracking_sells: Optional[List[Dict[str, Any]]] = None,
+    ) -> Dict[str, Path]:
         """
         Exports the results to CSV, JSON, and Markdown files in a date-stamped subdirectory.
         """
@@ -57,7 +63,7 @@ class ReportExporter:
         # Execute exports
         self.to_csv(results, csv_path)
         self.to_json(results, json_path)
-        self.to_markdown(results, md_path)
+        self.to_markdown(results, md_path, tracking_buys=tracking_buys, tracking_sells=tracking_sells)
         
         return {
             "csv": csv_path,
@@ -92,7 +98,13 @@ class ReportExporter:
         with open(path, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
 
-    def to_markdown(self, results: List[Dict[str, Any]], path: Path) -> None:
+    def to_markdown(
+        self,
+        results: List[Dict[str, Any]],
+        path: Path,
+        tracking_buys: Optional[List[Dict[str, Any]]] = None,
+        tracking_sells: Optional[List[Dict[str, Any]]] = None,
+    ) -> None:
         """Renders the Markdown summary using Jinja2."""
         # For backward compatibility, we split the results into buy/sell sections
         buy_signals = ["強烈買入 (爆發)", "買入 (動能增強)", "觀察 (跌勢收斂)"]
@@ -101,7 +113,12 @@ class ReportExporter:
         buy_results = [r for r in results if r.get('Signal') in buy_signals]
         sell_results = [r for r in results if r.get('Signal') in sell_signals]
 
-        content = self.render_summary(buy_results, sell_results)
+        content = self.render_summary(
+            buy_results,
+            sell_results,
+            tracking_buys=tracking_buys,
+            tracking_sells=tracking_sells,
+        )
 
         with open(path, 'w', encoding='utf-8') as f:
             f.write(content)

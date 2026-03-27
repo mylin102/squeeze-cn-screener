@@ -36,7 +36,22 @@ def exporter():
 
 def test_export_creates_directory_structure(exporter, mock_results, tmp_path):
     output_dir = tmp_path / "exports"
-    paths = exporter.export(mock_results, output_dir)
+    paths = exporter.export(
+        mock_results,
+        output_dir,
+        tracking_buys=[
+            {
+                "date": "2026-03-27",
+                "ticker": "600519.SS",
+                "name": "贵州茅台",
+                "entry_price": 1000.0,
+                "current_price": 1100.0,
+                "return_pct": 10.0,
+                "days_tracked": 2,
+                "last_updated": "2026-03-27",
+            }
+        ],
+    )
     
     # Check if the date directory was created
     from datetime import datetime, timedelta, timezone
@@ -51,6 +66,7 @@ def test_export_creates_directory_structure(exporter, mock_results, tmp_path):
     assert paths["csv"].exists()
     assert paths["json"].exists()
     assert paths["markdown"].exists()
+    assert "買入標的績效追蹤" in paths["markdown"].read_text(encoding="utf-8")
 
 def test_to_csv(exporter, mock_results, tmp_path):
     csv_path = tmp_path / "test.csv"

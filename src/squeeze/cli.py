@@ -123,13 +123,39 @@ def scan(
     
     console.print(table)
     
+    buy_signals = ["強烈買入 (爆發)", "買入 (動能增強)", "觀察 (跌勢收斂)"]
+    sell_signals = ["強烈賣出 (跌破)", "賣出 (動能轉弱)"]
+    today_buys = [r for r in matched if r.get('Signal') in buy_signals]
+    today_sells = [r for r in matched if r.get('Signal') in sell_signals]
+
+    tracking_buys = []
+    tracking_sells = []
+    try:
+        tracker = PerformanceTracker(Path("recommendations.csv"))
+        tracker.update_daily_performance()
+
+        market_context = tracker._infer_market_context()
+        market_context['pattern'] = pattern
+        tracker.record_recommendations(today_buys, rec_type='buy', market_context=market_context)
+        tracker.record_recommendations(today_sells, rec_type='sell', market_context=market_context)
+
+        tracking_buys = tracker.get_active_tracking_list(rec_type='buy')
+        tracking_sells = tracker.get_active_tracking_list(rec_type='sell')
+    except Exception as e:
+        console.print(f"[red]Error during tracking: {str(e)}[/red]")
+
     chart_paths = []
     if export or plot:
         base_dir = output_dir or Path("exports")
         if export:
             console.print(f"[yellow]Exporting results...[/yellow]")
             exporter = ReportExporter()
-            paths = exporter.export(matched, base_dir)
+            paths = exporter.export(
+                matched,
+                base_dir,
+                tracking_buys=tracking_buys,
+                tracking_sells=tracking_sells,
+            )
         
         if plot:
             plot_count = min(len(matched), top)
@@ -149,26 +175,6 @@ def scan(
                     console.print(f"  [green]✔[/green] Generated chart for {ticker}")
                 except Exception as e:
                     console.print(f"  [red]✘[/red] Error plotting {ticker}: {str(e)}")
-
-    tracking_buys = []
-    tracking_sells = []
-    try:
-        tracker = PerformanceTracker(Path("recommendations.csv"))
-        tracker.update_daily_performance()
-        tracking_buys = tracker.get_active_tracking_list(rec_type='buy')
-        tracking_sells = tracker.get_active_tracking_list(rec_type='sell')
-        
-        buy_signals = ["強烈買入 (爆發)", "買入 (動能增強)", "觀察 (跌勢收斂)"]
-        sell_signals = ["強烈賣出 (跌破)", "賣出 (動能轉弱)"]
-        today_buys = [r for r in matched if r.get('Signal') in buy_signals]
-        today_sells = [r for r in matched if r.get('Signal') in sell_signals]
-        
-        market_context = tracker._infer_market_context()
-        market_context['pattern'] = pattern
-        tracker.record_recommendations(today_buys, rec_type='buy', market_context=market_context)
-        tracker.record_recommendations(today_sells, rec_type='sell', market_context=market_context)
-    except Exception as e:
-        console.print(f"[red]Error during tracking: {str(e)}[/red]")
 
     if notify:
         console.print("[yellow]Sending notifications...[/yellow]")

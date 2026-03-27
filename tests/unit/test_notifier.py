@@ -1,7 +1,8 @@
 import os
 import pytest
 from unittest.mock import MagicMock, patch
-from squeeze.report.notifier import LineNotifier
+from pathlib import Path
+from squeeze.report.notifier import LineNotifier, EmailNotifier
 
 @pytest.fixture
 def mock_env(monkeypatch):
@@ -42,3 +43,20 @@ def test_send_summary_empty_message(mock_env):
     notifier = LineNotifier()
     result = notifier.send_summary("")
     assert result is False
+
+@patch("squeeze.report.notifier.smtplib.SMTP")
+def test_email_notifier_attaches_png_as_attachment(mock_smtp, tmp_path, monkeypatch):
+    monkeypatch.setenv("SMTP_USERNAME", "user@example.com")
+    monkeypatch.setenv("SMTP_PASSWORD", "secret")
+    monkeypatch.setenv("SMTP_RECIPIENT", "dest@example.com")
+
+    png_path = tmp_path / "chart.png"
+    png_path.write_bytes(b"\x89PNG\r\n\x1a\n")
+
+    notifier = EmailNotifier()
+    assert notifier.send_email("subject", "<b>body</b>", is_html=True, attachments=[png_path]) is True
+
+    smtp_instance = mock_smtp.return_value
+    sent_message = smtp_instance.sendmail.call_args[0][2]
+    assert 'filename="chart.png"' in sent_message
+    assert "Content-Disposition: attachment;" in sent_message
