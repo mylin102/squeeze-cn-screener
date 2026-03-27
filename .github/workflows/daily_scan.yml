@@ -33,7 +33,7 @@ jobs:
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
           SMTP_RECIPIENT: ${{ secrets.SMTP_RECIPIENT }}
         run: |
-          squeeze-tw --export --plot --notify
+          squeeze-cn scan --export --plot --notify
 
       - name: Commit and push results
         uses: stefanzweifel/git-auto-commit-action@v5
