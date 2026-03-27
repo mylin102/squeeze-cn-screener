@@ -1,1 +1,6 @@
 date,ticker,name,entry_price,signal,current_price,return_pct,strategy_return_pct,days_tracked,last_updated,status,type,pattern,momentum,prev_momentum,energy_level,squeeze_on,fired,market_regime,benchmark_ticker,value_score
+2026-03-27,000858.SZ,Wuliangye,102.6500015258789,觀察 (跌勢收斂),102.6500015258789,0.0,0.0,0,2026-03-27,tracking,buy,squeeze,-0.0449994405110677,-0.1266670227050781,0,True,False,range_bound,000300.SS,
+2026-03-27,300033.SZ,Hithink RoyalFlush,300.9200134277344,賣出 (動能轉弱),300.9200134277344,0.0,0.0,0,2026-03-27,tracking,sell,squeeze,-11.383336385091145,-6.126673380533854,0,True,False,range_bound,000300.SS,
+2026-03-27,600745.SS,Wingtech Technology,32.599998474121094,賣出 (動能轉弱),32.599998474121094,0.0,0.0,0,2026-03-27,tracking,sell,squeeze,-0.1783329645792643,0.26333427429199213,0,True,False,range_bound,000300.SS,
+2026-03-27,601288.SS,Agricultural Bank of China,6.480000019073486,賣出 (動能轉弱),6.480000019073486,0.0,0.0,0,2026-03-27,tracking,sell,squeeze,-0.11999980608622232,-0.07833313941955565,0,True,False,range_bound,000300.SS,
+2026-03-27,603259.SS,WuXi AppTec,97.0,買入 (動能增強),97.0,0.0,0.0,0,2026-03-27,tracking,buy,squeeze,0.368334452311198,-0.678332010904948,0,True,False,range_bound,000300.SS,
