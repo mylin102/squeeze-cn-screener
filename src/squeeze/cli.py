@@ -49,6 +49,23 @@ def _safe_chart_stem(ticker: str, name: str) -> str:
     return base.strip().replace(" ", "_")
 
 
+def _normalize_cn_ticker(raw_ticker: str, ticker_map: dict[str, str]) -> str:
+    ticker = raw_ticker.strip().upper()
+    if ticker in ticker_map:
+        return ticker
+
+    if "." in ticker:
+        return ticker
+
+    if ticker.isdigit():
+        for suffix in (".SZ", ".SS"):
+            candidate = f"{ticker}{suffix}"
+            if candidate in ticker_map:
+                return candidate
+
+    return ticker
+
+
 @app.command(name="analyze-tracking")
 def analyze_tracking(
     csv_path: Path = typer.Option(Path("recommendations.csv"), "--csv", help="Tracking CSV to analyze."),
@@ -56,6 +73,148 @@ def analyze_tracking(
     """Analyze completed tracking history and summarize strategy health."""
     report = build_tracking_report(load_tracking_frame(str(csv_path)))
     console.print(format_tracking_report(report))
+
+
+@app.command(name="analyze")
+def analyze(
+    ticker: str = typer.Option(..., "--ticker", help="Single China ticker to analyze."),
+    pattern: str = typer.Option("squeeze", "--pattern", "-P", help="Pattern to analyze (squeeze, houyi, whale)"),
+    period: str = typer.Option("2y", "--period", "-p", help="Data period (e.g., 2y, 1y, 6mo)"),
+    fundamentals: bool = typer.Option(True, "--fundamentals/--no-fundamentals", help="Include fundamentals if available."),
+):
+    """Analyze a single China ticker and print the latest pattern state."""
+    from squeeze.engine.patterns import detect_squeeze, detect_houyi_shooting_sun, detect_whale_trading
+    from squeeze.engine.scanner import MarketScanner
+
+    pattern_map = {
+        "squeeze": ("Squeeze", detect_squeeze),
+        "houyi": ("Houyi Shooting the Sun", detect_houyi_shooting_sun),
+        "whale": ("Whale Trading", detect_whale_trading),
+    }
+
+    if pattern not in pattern_map:
+        console.print(f"[red]Unknown pattern: {pattern}.[/red]")
+        raise typer.Exit(code=1)
+
+    pattern_title, pattern_fn = pattern_map[pattern]
+    ticker_map = fetch_tickers_with_names()
+    normalized_ticker = _normalize_cn_ticker(ticker, ticker_map)
+    scanner = MarketScanner([normalized_ticker], ticker_names=ticker_map)
+
+    with console.status(f"[bold green]Downloading market data for {normalized_ticker}...[/bold green]"):
+        scanner.fetch_data(period=period)
+
+    if scanner.data.empty:
+        console.print(f"[red]No market data available for {normalized_ticker}.[/red]")
+        raise typer.Exit(code=1)
+
+    if fundamentals:
+        with console.status(f"[bold green]Fetching fundamentals for {normalized_ticker}...[/bold green]"):
+            scanner.fetch_fundamentals()
+
+    results = scanner.scan(pattern_fn)
+    if not results:
+        console.print(f"[red]No analysis result produced for {normalized_ticker}.[/red]")
+        raise typer.Exit(code=1)
+
+    result = results[0]
+    table = Table(title=f"{pattern_title} Analysis: {normalized_ticker}")
+    table.add_column("Field", style="cyan")
+    table.add_column("Value", style="white")
+
+    display_rows = [
+        ("Ticker", result.get("ticker", normalized_ticker)),
+        ("Name", result.get("name", ticker_map.get(normalized_ticker, "未知"))),
+        ("Signal", result.get("Signal", "觀望")),
+        ("Close", f"{result.get('Close', 0.0):.2f}" if result.get("Close") is not None else "N/A"),
+        ("Squeeze On", "Yes" if result.get("squeeze_on") else "No"),
+        ("Fired", "Yes" if result.get("fired") else "No"),
+        ("Energy Level", str(result.get("energy_level", 0))),
+        ("Momentum", f"{result.get('momentum', 0.0):.4f}"),
+        ("Prev Momentum", f"{result.get('prev_momentum', 0.0):.4f}"),
+    ]
+
+    if pattern == "houyi":
+        display_rows.extend([
+            ("Houyi Match", "Yes" if result.get("is_houyi") else "No"),
+            ("Rally %", f"{result.get('rally_pct', 0.0):.2%}"),
+            ("Fib Level", f"{result.get('fib_level', 0.0):.3f}"),
+            ("Shooting Star", "Yes" if result.get("shooting_star") else "No"),
+        ])
+    elif pattern == "whale":
+        display_rows.extend([
+            ("Whale Match", "Yes" if result.get("is_whale") else "No"),
+            ("Daily Squeeze", "Yes" if result.get("daily_squeeze") else "No"),
+            ("Weekly Squeeze", "Yes" if result.get("weekly_squeeze") else "No"),
+            ("Daily Momentum", f"{result.get('daily_momentum', 0.0):.4f}"),
+            ("Weekly Momentum", f"{result.get('weekly_momentum', 0.0):.4f}"),
+        ])
+    else:
+        display_rows.extend([
+            ("Squeeze Match", "Yes" if (result.get("is_squeezed") or result.get("fired")) else "No"),
+            ("Timestamp", result.get("timestamp", "N/A")),
+        ])
+
+    fundamentals_map = {
+        "marketCap": "Market Cap",
+        "averageVolume": "Average Volume",
+        "trailingPE": "Trailing PE",
+        "priceToBook": "Price/Book",
+        "dividendYield": "Dividend Yield",
+        "value_score": "Value Score",
+    }
+    for key, label in fundamentals_map.items():
+        if key in result and pd.notna(result[key]):
+            value = result[key]
+            if key == "marketCap":
+                value = f"{float(value) / 1e9:.2f}B"
+            elif key == "dividendYield":
+                value = f"{float(value):.2%}"
+            elif isinstance(value, float):
+                value = f"{value:.2f}"
+            display_rows.append((label, str(value)))
+
+    for field, value in display_rows:
+        table.add_row(field, value)
+
+    console.print(table)
+
+
+@app.command(name="plot")
+def plot(
+    ticker: str = typer.Option(..., "--ticker", help="Single China ticker to plot."),
+    period: str = typer.Option("2y", "--period", "-p", help="Data period (e.g., 2y, 1y, 6mo)"),
+    output: Optional[Path] = typer.Option(None, "--output", "-o", help="Output PNG path."),
+):
+    """Generate a chart for a single China ticker."""
+    from squeeze.engine.scanner import MarketScanner
+    from squeeze.report.visualizer import plot_ticker
+
+    ticker_map = fetch_tickers_with_names()
+    normalized_ticker = _normalize_cn_ticker(ticker, ticker_map)
+    scanner = MarketScanner([normalized_ticker], ticker_names=ticker_map)
+
+    with console.status(f"[bold green]Downloading market data for {normalized_ticker}...[/bold green]"):
+        scanner.fetch_data(period=period)
+
+    if scanner.data.empty:
+        console.print(f"[red]No market data available for {normalized_ticker}.[/red]")
+        raise typer.Exit(code=1)
+
+    if isinstance(scanner.data.columns, pd.MultiIndex):
+        ticker_df = scanner.data[normalized_ticker].dropna(subset=["Close"])
+    else:
+        ticker_df = scanner.data.dropna(subset=["Close"])
+
+    if ticker_df.empty:
+        console.print(f"[red]No plottable data available for {normalized_ticker}.[/red]")
+        raise typer.Exit(code=1)
+
+    display_name = ticker_map.get(normalized_ticker, "未知")
+    safe_name = _safe_chart_stem(normalized_ticker, display_name)
+    chart_path = output or Path("exports") / "single" / f"{safe_name}.png"
+    plot_ticker(ticker_df, f"{normalized_ticker} {display_name}", str(chart_path))
+    console.print(f"[green]Saved chart:[/green] {chart_path}")
 
 @app.command(name="scan")
 def scan(

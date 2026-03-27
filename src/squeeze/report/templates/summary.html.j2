@@ -21,30 +21,43 @@
         <h1>Squeeze 技術指標掃描 - 每日摘要 v{{ app_version }}</h1>
         <p><strong>日期:</strong> {{ date }}</p>
 
-        {% if buy_count > 0 %}
-        <h2>🚀 買入建議標的 (Top 10)</h2>
+        <h2>策略說明</h2>
+        <p><strong>Houyi</strong>: 強勢股拉升後回檔到關鍵區，尋找再發動型態。</p>
+        <p><strong>Whale</strong>: 日線與週線動能同步轉強，偏波段級別的共振訊號。</p>
+
+        {% if priority_count > 0 %}
+        <h2>⭐ 今日主名單 (Top 10)</h2>
         <table>
             <thead>
                 <tr>
                     <th>代碼</th>
                     <th>名稱</th>
                     <th>操作建議</th>
-                    <th>Squeeze 狀態</th>
+                    <th>Houyi</th>
+                    <th>Whale</th>
+                    <th>Priority Score</th>
                     <th>動能 (Momentum)</th>
                 </tr>
             </thead>
             <tbody>
-                {% for item in buy_results %}
+                {% for item in priority_results %}
                 <tr>
                     <td><strong>{{ item.ticker }}</strong></td>
                     <td>{{ item.name }}</td>
                     <td class="buy">{{ item.signal }}</td>
-                    <td>{{ '活躍' if item.squeeze_active else '非活躍' }}</td>
+                    <td>{{ 'Yes' if item.has_houyi else 'No' }}</td>
+                    <td>{{ 'Yes' if item.has_whale else 'No' }}</td>
+                    <td>{{ item.composite_score }}</td>
                     <td>{{ "%.4f"|format(item.momentum) if item.momentum else 'N/A' }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        <p>原始買入/觀察名單：{{ buy_count }} | Houyi 命中：{{ houyi_count }} | Whale 命中：{{ whale_count }}</p>
+        {% else %}
+        <h2>今日無主名單</h2>
+        <p>目前的市場掃描中，尚無個股同時滿足足夠的動能與優先級條件。</p>
+        <p>原始買入/觀察名單：{{ buy_count }} | Houyi 命中：{{ houyi_count }} | Whale 命中：{{ whale_count }}</p>
         {% endif %}
 
         {% if sell_count > 0 %}
@@ -67,6 +80,54 @@
                     <td class="sell">{{ item.signal }}</td>
                     <td>{{ "%.4f"|format(item.momentum) if item.momentum else 'N/A' }}</td>
                     <td>{{ "%.1f"|format(item.energy) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+        {% if houyi_count > 0 %}
+        <h2>🏹 Houyi 名單 (Top 10)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>代碼</th>
+                    <th>名稱</th>
+                    <th>操作建議</th>
+                    <th>動能 (Momentum)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in houyi_results %}
+                <tr>
+                    <td><strong>{{ item.ticker }}</strong></td>
+                    <td>{{ item.name }}</td>
+                    <td class="buy">{{ item.signal }}</td>
+                    <td>{{ "%.4f"|format(item.momentum) if item.momentum else 'N/A' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+        {% if whale_count > 0 %}
+        <h2>🐋 Whale 名單 (Top 10)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>代碼</th>
+                    <th>名稱</th>
+                    <th>操作建議</th>
+                    <th>動能 (Momentum)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in whale_results %}
+                <tr>
+                    <td><strong>{{ item.ticker }}</strong></td>
+                    <td>{{ item.name }}</td>
+                    <td class="buy">{{ item.signal }}</td>
+                    <td>{{ "%.4f"|format(item.momentum) if item.momentum else 'N/A' }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

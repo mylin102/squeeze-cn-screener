@@ -102,10 +102,23 @@ def test_to_markdown(exporter, mock_results, tmp_path):
     for r in mock_results:
         r['Signal'] = "買入 (動能增強)"
         r['is_squeezed'] = True
+        r['name'] = r['ticker']
+
+    extra_sections = {
+        "priority": [
+            {
+                **mock_results[0],
+                "name": "AAPL",
+                "has_houyi": True,
+                "has_whale": False,
+                "composite_score": 3,
+            }
+        ]
+    }
         
     md_path = tmp_path / "test.md"
     # Call render_summary with split results
-    content = exporter.render_summary(buy_results=mock_results, sell_results=[])
+    content = exporter.render_summary(buy_results=mock_results, sell_results=[], extra_sections=extra_sections)
     with open(md_path, 'w', encoding='utf-8') as f:
         f.write(content)
     
@@ -115,7 +128,9 @@ def test_to_markdown(exporter, mock_results, tmp_path):
         content = f.read()
         
         assert "# Squeeze 技術指標掃描 - 每日摘要" in content
-        assert "## 🚀 買入建議標的 (Top 10)" in content
+        assert "## 策略說明" in content
+        assert "## ⭐ 今日主名單 (Top 10)" in content
+        assert "原始買入/觀察名單：3" in content
         assert "AAPL" in content
         assert "買入 (動能增強)" in content
 
@@ -198,3 +213,56 @@ def test_render_summary_groups_tracking_buys_by_ticker(exporter):
     assert content.count("**600519.SS**") == 1
     assert "平均成本" in content
     assert "| 2026-03-27 | 2 | **600519.SS** | 贵州茅台 | 950.00 | 1100.00 | 2 | **10.00%** |" in content
+
+def test_render_summary_includes_priority_houyi_and_whale_sections(exporter):
+    content = exporter.render_summary(
+        buy_results=[
+            {
+                "ticker": "600519.SS",
+                "name": "贵州茅台",
+                "Signal": "強烈買入 (爆發)",
+                "momentum": 0.9,
+                "has_houyi": True,
+                "has_whale": True,
+                "composite_score": 6,
+            }
+        ],
+        extra_sections={
+            "priority": [
+                {
+                    "ticker": "600519.SS",
+                    "name": "贵州茅台",
+                    "Signal": "強烈買入 (爆發)",
+                    "momentum": 0.9,
+                    "has_houyi": True,
+                    "has_whale": True,
+                    "composite_score": 6,
+                }
+            ],
+            "houyi": [
+                {
+                    "ticker": "600519.SS",
+                    "name": "贵州茅台",
+                    "Signal": "買入 (動能增強)",
+                    "momentum": 0.5,
+                    "rally_pct": 0.2,
+                    "is_houyi": True,
+                }
+            ],
+            "whale": [
+                {
+                    "ticker": "600519.SS",
+                    "name": "贵州茅台",
+                    "Signal": "買入 (動能增強)",
+                    "momentum": 0.5,
+                    "weekly_momentum": 0.8,
+                    "is_whale": True,
+                }
+            ],
+        },
+    )
+
+    assert "## ⭐ 今日主名單 (Top 10)" in content
+    assert "## 🏹 Houyi 名單 (Top 10)" in content
+    assert "## 🐋 Whale 名單 (Top 10)" in content
+    assert "Priority Score" in content
