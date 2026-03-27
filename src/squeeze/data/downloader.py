@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 from typing import Optional
 
 import pandas as pd
@@ -19,7 +20,12 @@ PERIOD_LIMIT_MAP = {
 }
 
 
-def download_market_data(tickers: list[str], period: str = "1y") -> pd.DataFrame:
+def download_market_data(
+    tickers: list[str],
+    period: str = "1y",
+    cache_path: Optional[Path] = None,
+    refresh_cache: bool = False,
+) -> pd.DataFrame:
     """
     Download daily OHLC data for a list of tickers.
 
@@ -29,6 +35,12 @@ def download_market_data(tickers: list[str], period: str = "1y") -> pd.DataFrame
     if not tickers:
         logger.warning("No tickers provided for download.")
         return pd.DataFrame()
+
+    if cache_path and not refresh_cache:
+        cached = load_market_data_cache(cache_path, tickers)
+        if not cached.empty:
+            logger.info("Loaded market data cache from %s", cache_path)
+            return cached
 
     all_frames: list[pd.DataFrame] = []
     failed_tickers: list[str] = []
@@ -53,7 +65,36 @@ def download_market_data(tickers: list[str], period: str = "1y") -> pd.DataFrame
         logger.warning("No data found for any tickers.")
         return pd.DataFrame()
 
-    return pd.concat(all_frames, axis=1).sort_index(axis=1)
+    combined = pd.concat(all_frames, axis=1).sort_index(axis=1)
+    if cache_path:
+        save_market_data_cache(combined, cache_path)
+    return combined
+
+
+def load_market_data_cache(cache_path: Path, tickers: Optional[list[str]] = None) -> pd.DataFrame:
+    path = Path(cache_path)
+    if not path.exists():
+        return pd.DataFrame()
+
+    df = pd.read_pickle(path)
+    if not isinstance(df.columns, pd.MultiIndex):
+        return df
+    if not tickers:
+        return df
+
+    available_tickers = set(df.columns.get_level_values(0))
+    missing_tickers = set(tickers) - available_tickers
+    if missing_tickers:
+        logger.warning("Market data cache %s missing %d tickers.", path, len(missing_tickers))
+        return pd.DataFrame()
+    return df.loc[:, df.columns.get_level_values(0).isin(tickers)].sort_index(axis=1)
+
+
+def save_market_data_cache(price_data: pd.DataFrame, cache_path: Path) -> Path:
+    path = Path(cache_path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    price_data.sort_index().sort_index(axis=1).to_pickle(path)
+    return path
 
 
 def _download_single_ticker_from_eastmoney(ticker: str, period: str) -> Optional[pd.DataFrame]:

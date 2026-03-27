@@ -1,5 +1,6 @@
 import typer
 import pandas as pd
+import json
 from rich.console import Console
 from rich.table import Table
 from pathlib import Path
@@ -7,6 +8,16 @@ from pathlib import Path
 from typing import Optional
 
 from squeeze.data.tickers import fetch_tickers_with_names
+from squeeze.data.downloader import download_market_data
+from squeeze.report.backtest import (
+    export_backtest_report,
+    export_rolling_backtest_report,
+    render_backtest_grid_report,
+    render_backtest_report,
+    render_rolling_backtest_report,
+    run_rolling_backtest,
+    run_signal_backtest,
+)
 from squeeze.report.exporter import ReportExporter
 from squeeze.report.notifier import LineNotifier, EmailNotifier
 from squeeze.report.performance import PerformanceTracker
@@ -73,6 +84,175 @@ def analyze_tracking(
     """Analyze completed tracking history and summarize strategy health."""
     report = build_tracking_report(load_tracking_frame(str(csv_path)))
     console.print(format_tracking_report(report))
+
+
+@app.command(name="backtest")
+def backtest(
+    start: str = typer.Option("2026-01-01", "--start", help="Backtest start date (YYYY-MM-DD)."),
+    end: Optional[str] = typer.Option(None, "--end", help="Backtest end date (YYYY-MM-DD). Defaults to today."),
+    limit: Optional[int] = typer.Option(None, "--limit", "-l", help="Limit tickers for quick validation runs."),
+    max_positions: int = typer.Option(10, "--max-positions", help="Maximum simultaneous positions."),
+    initial_capital: float = typer.Option(1_000_000.0, "--initial-capital", help="Initial portfolio capital."),
+    stop_loss_ma_window: Optional[int] = typer.Option(None, "--stop-loss-ma-window", help="Exit when close falls below the moving average window by the configured ticks."),
+    stop_loss_ticks: int = typer.Option(0, "--stop-loss-ticks", help="Number of price ticks below the moving average to trigger stop loss."),
+    transaction_cost_bps: float = typer.Option(0.0, "--transaction-cost-bps", help="Transaction cost in basis points applied on both entry and exit."),
+    slippage_bps: float = typer.Option(0.0, "--slippage-bps", help="Slippage in basis points applied on both entry and exit."),
+    include_observation: bool = typer.Option(True, "--include-observation/--exclude-observation", help="Include or exclude '觀察 (跌勢收斂)' buy signals."),
+    rolling_window_sessions: Optional[int] = typer.Option(None, "--rolling-window-sessions", help="Run rolling stability analysis using this many trading sessions per window."),
+    rolling_step_sessions: int = typer.Option(10, "--rolling-step-sessions", help="Advance rolling windows by this many trading sessions."),
+    cache_path: Optional[Path] = typer.Option(None, "--cache-path", help="Read and write historical price cache from this pickle path."),
+    refresh_cache: bool = typer.Option(False, "--refresh-cache", help="Ignore existing cache and rebuild it from live data."),
+    output_dir: Optional[Path] = typer.Option(None, "--output-dir", "-o", help="Output directory for reports."),
+):
+    """Backtest buy and sell signals using historical daily data."""
+    console.print("[yellow]Preparing backtest universe...[/yellow]")
+    ticker_map = fetch_tickers_with_names()
+    all_tickers = sorted(ticker_map.keys())
+    if limit:
+        all_tickers = all_tickers[:limit]
+        console.print(f"[yellow]Limiting backtest to {limit} tickers.[/yellow]")
+
+    console.print(f"[green]Downloading historical data for {len(all_tickers)} tickers...[/green]")
+    with console.status("[bold green]Fetching price history...[/bold green]"):
+        price_data = download_market_data(
+            all_tickers,
+            period="1y",
+            cache_path=cache_path,
+            refresh_cache=refresh_cache,
+        )
+
+    if price_data.empty:
+        console.print("[red]No historical data available for backtest.[/red]")
+        raise typer.Exit(code=1)
+
+    selected_buy_signals = {"強烈買入 (爆發)", "買入 (動能增強)"}
+    if include_observation:
+        selected_buy_signals.add("觀察 (跌勢收斂)")
+    base_dir = output_dir or Path("exports") / "backtests"
+    if rolling_window_sessions:
+        console.print("[yellow]Running rolling backtest analysis...[/yellow]")
+        report = run_rolling_backtest(
+            price_data=price_data,
+            ticker_names=ticker_map,
+            start_date=start,
+            end_date=end,
+            initial_capital=initial_capital,
+            max_positions=max_positions,
+            stop_loss_ma_window=stop_loss_ma_window,
+            stop_loss_ticks=stop_loss_ticks,
+            buy_signals=selected_buy_signals,
+            transaction_cost_bps=transaction_cost_bps,
+            slippage_bps=slippage_bps,
+            rolling_window_sessions=rolling_window_sessions,
+            rolling_step_sessions=rolling_step_sessions,
+        )
+        paths = export_rolling_backtest_report(report, base_dir / "rolling")
+        console.print(render_rolling_backtest_report(report))
+    else:
+        console.print("[yellow]Running signal backtest...[/yellow]")
+        report = run_signal_backtest(
+            price_data=price_data,
+            ticker_names=ticker_map,
+            start_date=start,
+            end_date=end,
+            initial_capital=initial_capital,
+            max_positions=max_positions,
+            stop_loss_ma_window=stop_loss_ma_window,
+            stop_loss_ticks=stop_loss_ticks,
+            buy_signals=selected_buy_signals,
+            transaction_cost_bps=transaction_cost_bps,
+            slippage_bps=slippage_bps,
+        )
+        paths = export_backtest_report(report, base_dir)
+        console.print(render_backtest_report(report))
+
+    console.print(f"[green]Saved markdown report:[/green] {paths['markdown']}")
+    console.print(f"[green]Saved JSON report:[/green] {paths['json']}")
+
+
+@app.command(name="backtest-grid")
+def backtest_grid(
+    start: str = typer.Option("2026-01-01", "--start", help="Backtest start date (YYYY-MM-DD)."),
+    end: Optional[str] = typer.Option(None, "--end", help="Backtest end date (YYYY-MM-DD). Defaults to today."),
+    limit: Optional[int] = typer.Option(None, "--limit", "-l", help="Limit tickers for quick validation runs."),
+    max_positions: int = typer.Option(10, "--max-positions", help="Maximum simultaneous positions."),
+    initial_capital: float = typer.Option(1_000_000.0, "--initial-capital", help="Initial portfolio capital."),
+    ma_windows: str = typer.Option("20,30", "--ma-windows", help="Comma-separated MA windows to test."),
+    ticks: str = typer.Option("1,2,3", "--ticks", help="Comma-separated tick offsets to test."),
+    cache_path: Optional[Path] = typer.Option(None, "--cache-path", help="Read and write historical price cache from this pickle path."),
+    refresh_cache: bool = typer.Option(False, "--refresh-cache", help="Ignore existing cache and rebuild it from live data."),
+    output_dir: Optional[Path] = typer.Option(None, "--output-dir", "-o", help="Output directory for grid reports."),
+):
+    """Run a stop-loss parameter grid for signal backtests."""
+    console.print("[yellow]Preparing backtest grid universe...[/yellow]")
+    ticker_map = fetch_tickers_with_names()
+    all_tickers = sorted(ticker_map.keys())
+    if limit:
+        all_tickers = all_tickers[:limit]
+        console.print(f"[yellow]Limiting backtest grid to {limit} tickers.[/yellow]")
+
+    ma_values = [int(item.strip()) for item in ma_windows.split(",") if item.strip()]
+    tick_values = [int(item.strip()) for item in ticks.split(",") if item.strip()]
+    if not ma_values or not tick_values:
+        console.print("[red]MA windows and ticks must not be empty.[/red]")
+        raise typer.Exit(code=1)
+
+    console.print(f"[green]Downloading historical data for {len(all_tickers)} tickers...[/green]")
+    with console.status("[bold green]Fetching price history...[/bold green]"):
+        price_data = download_market_data(
+            all_tickers,
+            period="1y",
+            cache_path=cache_path,
+            refresh_cache=refresh_cache,
+        )
+
+    if price_data.empty:
+        console.print("[red]No historical data available for backtest grid.[/red]")
+        raise typer.Exit(code=1)
+
+    rows = []
+    for ma_window in ma_values:
+        for tick_value in tick_values:
+            console.print(f"[yellow]Testing MA {ma_window} / ticks {tick_value}...[/yellow]")
+            report = run_signal_backtest(
+                price_data=price_data,
+                ticker_names=ticker_map,
+                start_date=start,
+                end_date=end,
+                initial_capital=initial_capital,
+                max_positions=max_positions,
+                stop_loss_ma_window=ma_window,
+                stop_loss_ticks=tick_value,
+            )
+            summary = report["summary"]
+            rows.append(
+                {
+                    "ma_window": ma_window,
+                    "ticks": tick_value,
+                    "ending_equity": summary["ending_equity"],
+                    "total_return_pct": summary["total_return_pct"],
+                    "max_drawdown_pct": summary["max_drawdown_pct"],
+                    "sharpe_ratio": summary["sharpe_ratio"],
+                    "win_rate_pct": summary["win_rate_pct"],
+                    "avg_trade_return_pct": summary["avg_trade_return_pct"],
+                    "profit_factor": summary["profit_factor"],
+                }
+            )
+
+    rows = sorted(rows, key=lambda item: (item["total_return_pct"], item["sharpe_ratio"]), reverse=True)
+    report_text = render_backtest_grid_report(rows, start, end or pd.Timestamp.now().strftime("%Y-%m-%d"))
+    console.print(report_text)
+
+    base_dir = output_dir or Path("exports") / "backtests" / "grid"
+    base_dir.mkdir(parents=True, exist_ok=True)
+    timestamp = pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")
+    md_path = base_dir / f"backtest_grid_{timestamp}.md"
+    json_path = base_dir / f"backtest_grid_{timestamp}.json"
+    md_path.write_text(report_text, encoding="utf-8")
+    json_path.write_text(json.dumps(rows, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    console.print(f"[green]Saved markdown report:[/green] {md_path}")
+    console.print(f"[green]Saved JSON report:[/green] {json_path}")
 
 
 @app.command(name="analyze")
