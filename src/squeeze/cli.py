@@ -16,6 +16,13 @@ app = typer.Typer(help="Squeeze CN Screener for China Market")
 console = Console()
 
 
+def _safe_chart_stem(ticker: str, name: str) -> str:
+    base = f"{ticker.split('.')[0]}_{name or 'unknown'}"
+    for char in '/\\:*?"<>|':
+        base = base.replace(char, "_")
+    return base.strip().replace(" ", "_")
+
+
 @app.command(name="analyze-tracking")
 def analyze_tracking(
     csv_path: Path = typer.Option(Path("recommendations.csv"), "--csv", help="Tracking CSV to analyze."),
@@ -169,8 +176,9 @@ def scan(
                 ticker = matched[i]['ticker']
                 try:
                     ticker_data = scanner.data[ticker].dropna(subset=['Close']) if isinstance(scanner.data.columns, pd.MultiIndex) else scanner.data.dropna(subset=['Close'])
-                    chart_path = charts_dir / f"{ticker.split('.')[0]}.png"
-                    plot_ticker(ticker_data, ticker, str(chart_path))
+                    display_name = matched[i].get('name', ticker_map.get(ticker, "未知"))
+                    chart_path = charts_dir / f"{_safe_chart_stem(ticker, display_name)}.png"
+                    plot_ticker(ticker_data, f"{ticker} {display_name}", str(chart_path))
                     chart_paths.append(chart_path)
                     console.print(f"  [green]✔[/green] Generated chart for {ticker}")
                 except Exception as e:
