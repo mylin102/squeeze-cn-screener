@@ -95,6 +95,7 @@ def backtest(
     initial_capital: float = typer.Option(1_000_000.0, "--initial-capital", help="Initial portfolio capital."),
     stop_loss_ma_window: Optional[int] = typer.Option(None, "--stop-loss-ma-window", help="Exit when close falls below the moving average window by the configured ticks."),
     stop_loss_ticks: int = typer.Option(0, "--stop-loss-ticks", help="Number of price ticks below the moving average to trigger stop loss."),
+    stop_loss_pct: Optional[float] = typer.Option(None, "--stop-loss-pct", help="Exit when close falls by this percentage below entry price."),
     transaction_cost_bps: float = typer.Option(0.0, "--transaction-cost-bps", help="Transaction cost in basis points applied on both entry and exit."),
     slippage_bps: float = typer.Option(0.0, "--slippage-bps", help="Slippage in basis points applied on both entry and exit."),
     include_observation: bool = typer.Option(True, "--include-observation/--exclude-observation", help="Include or exclude '觀察 (跌勢收斂)' buy signals."),
@@ -140,6 +141,7 @@ def backtest(
             max_positions=max_positions,
             stop_loss_ma_window=stop_loss_ma_window,
             stop_loss_ticks=stop_loss_ticks,
+            stop_loss_pct=stop_loss_pct,
             buy_signals=selected_buy_signals,
             transaction_cost_bps=transaction_cost_bps,
             slippage_bps=slippage_bps,
@@ -159,6 +161,7 @@ def backtest(
             max_positions=max_positions,
             stop_loss_ma_window=stop_loss_ma_window,
             stop_loss_ticks=stop_loss_ticks,
+            stop_loss_pct=stop_loss_pct,
             buy_signals=selected_buy_signals,
             transaction_cost_bps=transaction_cost_bps,
             slippage_bps=slippage_bps,
@@ -410,7 +413,10 @@ def scan(
     min_volume: Optional[float] = typer.Option(None, "--min-volume", help="Minimum average daily volume"),
     min_score: Optional[float] = typer.Option(None, "--min-score", help="Minimum Value Score (0.0 - 1.0)"),
     min_price: Optional[float] = typer.Option(None, "--min-price", help="Minimum stock price (CNY)"),
-    max_price: Optional[float] = typer.Option(None, "--max-price", help="Maximum stock price (CNY)")
+    max_price: Optional[float] = typer.Option(None, "--max-price", help="Maximum stock price (CNY)"),
+    tracking_stop_loss_pct: Optional[float] = typer.Option(None, "--tracking-stop-loss-pct", help="Attach a fixed stop-loss alert percentage to tracked buy positions."),
+    tracking_stop_loss_ma_window: Optional[int] = typer.Option(None, "--tracking-stop-loss-ma-window", help="Attach a moving-average stop-loss alert window to tracked buy positions."),
+    tracking_stop_loss_ticks: int = typer.Option(0, "--tracking-stop-loss-ticks", help="Attach a tick offset below the moving average for tracked buy stop-loss alerts."),
 ):
     """
     Scan all China A-share stocks for specific technical patterns and fundamental filters.
@@ -525,7 +531,14 @@ def scan(
 
         market_context = tracker._infer_market_context()
         market_context['pattern'] = pattern
-        tracker.record_recommendations(today_buys, rec_type='buy', market_context=market_context)
+        tracker.record_recommendations(
+            today_buys,
+            rec_type='buy',
+            market_context=market_context,
+            stop_loss_pct=tracking_stop_loss_pct,
+            stop_loss_ma_window=tracking_stop_loss_ma_window,
+            stop_loss_ticks=tracking_stop_loss_ticks,
+        )
         tracker.record_recommendations(today_sells, rec_type='sell', market_context=market_context)
 
         tracking_buys = tracker.get_active_tracking_list(rec_type='buy')

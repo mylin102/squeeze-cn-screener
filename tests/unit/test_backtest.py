@@ -93,6 +93,7 @@ def test_render_and_export_backtest_report(tmp_path):
         "config": {
             "stop_loss_ma_window": 20,
             "stop_loss_ticks": 2,
+            "stop_loss_pct": 8.0,
             "tick_size": 0.01,
             "buy_signals": ["強烈買入 (爆發)", "買入 (動能增強)", "觀察 (跌勢收斂)"],
             "transaction_cost_bps": 10.0,
@@ -129,6 +130,7 @@ def test_render_and_export_backtest_report(tmp_path):
     assert "Total return: 8.00%" in content
     assert "Open Positions" in content
     assert "Stop loss: close below 20D MA by 2 ticks" in content
+    assert "Fixed stop loss: exit when close falls 8.00% below entry" in content
     assert "Trading frictions: cost 10.00 bps, slippage 5.00 bps per side" in content
 
     paths = export_backtest_report(report, tmp_path / "backtests")
@@ -168,6 +170,38 @@ def test_run_signal_backtest_supports_ma_stop_loss():
     trade = report["trades"][0]
     assert trade["exit_date"] == "2026-01-06"
     assert trade["exit_signal"] == "停損: 跌破20日線下2檔"
+
+
+def test_run_signal_backtest_supports_fixed_pct_stop_loss():
+    price_data = _make_price_data()
+
+    def fake_indicator(raw_df: pd.DataFrame) -> pd.DataFrame:
+        frame = raw_df.copy()
+        frame["Squeeze_On"] = False
+        frame["Energy_Level"] = 0
+        frame["Momentum"] = 0.0
+        frame["Prev_Momentum"] = 0.0
+        frame["Fired"] = False
+        frame["Signal"] = "觀望 (動能減弱)"
+        frame.loc[pd.Timestamp("2026-01-01"), "Signal"] = "買入 (動能增強)"
+        frame.loc[pd.Timestamp("2026-01-01"), "Momentum"] = 0.8
+        frame.loc[pd.Timestamp("2026-01-05"), "Close"] = 95.0
+        return frame
+
+    with patch("squeeze.report.backtest.calculate_squeeze_indicators", side_effect=fake_indicator):
+        report = run_signal_backtest(
+            price_data=price_data,
+            ticker_names={"600000.SS": "浦发银行"},
+            start_date="2026-01-01",
+            end_date="2026-01-15",
+            initial_capital=100000.0,
+            max_positions=2,
+            stop_loss_pct=8.0,
+        )
+
+    trade = report["trades"][0]
+    assert trade["exit_date"] == "2026-01-06"
+    assert trade["exit_signal"] == "停損: 跌破固定比例8.00%"
 
 
 def test_run_signal_backtest_applies_costs_and_signal_filter():

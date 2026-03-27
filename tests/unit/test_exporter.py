@@ -154,6 +154,8 @@ def test_render_html_summary_groups_tracking_buys_by_ticker(exporter):
                 "return_pct": 10.0,
                 "days_tracked": 2,
                 "last_updated": "2026-03-27",
+                "stop_loss_message": "已觸發固定停損 8.00%",
+                "stop_loss_triggered": True,
             },
             {
                 "date": "2026-03-25",
@@ -183,6 +185,7 @@ def test_render_html_summary_groups_tracking_buys_by_ticker(exporter):
     assert ">2<" in html
     assert "950.00" in html
     assert "<strong>000001.SZ</strong>" in html
+    assert "已觸發固定停損 8.00%" in html
 
 def test_render_summary_groups_tracking_buys_by_ticker(exporter):
     content = exporter.render_summary(
@@ -196,6 +199,8 @@ def test_render_summary_groups_tracking_buys_by_ticker(exporter):
                 "return_pct": 10.0,
                 "days_tracked": 2,
                 "last_updated": "2026-03-27",
+                "stop_loss_message": "已觸發固定停損 8.00%",
+                "stop_loss_triggered": True,
             },
             {
                 "date": "2026-03-25",
@@ -212,7 +217,8 @@ def test_render_summary_groups_tracking_buys_by_ticker(exporter):
 
     assert content.count("**600519.SS**") == 1
     assert "平均成本" in content
-    assert "| 2026-03-27 | 2 | **600519.SS** | 贵州茅台 | 950.00 | 1100.00 | 2 | **10.00%** |" in content
+    assert "停損警示" in content
+    assert "| 2026-03-27 | 2 | **600519.SS** | 贵州茅台 | 950.00 | 1100.00 | 2 | **10.00%** | 已觸發固定停損 8.00% |" in content
 
 def test_render_summary_includes_priority_houyi_and_whale_sections(exporter):
     content = exporter.render_summary(

@@ -12,7 +12,9 @@ TRACKING_COLUMNS = [
     'current_price', 'return_pct', 'strategy_return_pct', 'days_tracked',
     'last_updated', 'status', 'type', 'pattern', 'momentum',
     'prev_momentum', 'energy_level', 'squeeze_on', 'fired',
-    'market_regime', 'benchmark_ticker', 'value_score'
+    'market_regime', 'benchmark_ticker', 'value_score',
+    'stop_loss_rule', 'stop_loss_threshold', 'stop_loss_triggered', 'stop_loss_message',
+    'stop_loss_ma_window', 'stop_loss_ticks', 'stop_loss_tick_size'
 ]
 
 
@@ -33,6 +35,13 @@ def normalize_tracking_df(df: pd.DataFrame) -> pd.DataFrame:
         'market_regime': 'unknown',
         'benchmark_ticker': '000300.SS',
         'value_score': None,
+        'stop_loss_rule': None,
+        'stop_loss_threshold': None,
+        'stop_loss_triggered': False,
+        'stop_loss_message': None,
+        'stop_loss_ma_window': None,
+        'stop_loss_ticks': 0,
+        'stop_loss_tick_size': 0.01,
     }
     for column in TRACKING_COLUMNS:
         if column not in normalized.columns:
@@ -51,6 +60,12 @@ def normalize_tracking_df(df: pd.DataFrame) -> pd.DataFrame:
     normalized['energy_level'] = pd.to_numeric(normalized['energy_level'], errors='coerce').fillna(0).astype(int)
     normalized['squeeze_on'] = normalized['squeeze_on'].apply(lambda value: bool(value) if pd.notna(value) else False)
     normalized['fired'] = normalized['fired'].apply(lambda value: bool(value) if pd.notna(value) else False)
+    normalized['stop_loss_threshold'] = pd.to_numeric(normalized['stop_loss_threshold'], errors='coerce')
+    normalized['stop_loss_triggered'] = normalized['stop_loss_triggered'].apply(lambda value: bool(value) if pd.notna(value) else False)
+    normalized['stop_loss_message'] = normalized['stop_loss_message'].astype(object)
+    normalized['stop_loss_ma_window'] = pd.to_numeric(normalized['stop_loss_ma_window'], errors='coerce')
+    normalized['stop_loss_ticks'] = pd.to_numeric(normalized['stop_loss_ticks'], errors='coerce').fillna(0).astype(int)
+    normalized['stop_loss_tick_size'] = pd.to_numeric(normalized['stop_loss_tick_size'], errors='coerce').fillna(0.01)
     return normalized[TRACKING_COLUMNS]
 
 
@@ -121,6 +136,10 @@ class PerformanceTracker:
         results: List[Dict[str, Any]],
         rec_type: str = 'buy',
         market_context: Optional[Dict[str, Any]] = None,
+        stop_loss_pct: Optional[float] = None,
+        stop_loss_ma_window: Optional[int] = None,
+        stop_loss_ticks: int = 0,
+        stop_loss_tick_size: float = 0.01,
     ):
         """
         Records top 10 recommendations of a specific type.
@@ -165,6 +184,13 @@ class PerformanceTracker:
                 'market_regime': context.get('market_regime', 'unknown'),
                 'benchmark_ticker': context.get('benchmark_ticker', '000300.SS'),
                 'value_score': r.get('value_score'),
+                'stop_loss_rule': f'fixed_pct_{stop_loss_pct:.2f}' if stop_loss_pct is not None and rec_type == 'buy' else None,
+                'stop_loss_threshold': stop_loss_pct if rec_type == 'buy' else None,
+                'stop_loss_triggered': False,
+                'stop_loss_message': None,
+                'stop_loss_ma_window': stop_loss_ma_window if rec_type == 'buy' else None,
+                'stop_loss_ticks': stop_loss_ticks if rec_type == 'buy' else 0,
+                'stop_loss_tick_size': stop_loss_tick_size if rec_type == 'buy' else 0.01,
             })
         
         df_new = pd.DataFrame(new_records)
@@ -214,8 +240,8 @@ class PerformanceTracker:
         tickers = active['ticker'].unique().tolist()
         logger.info(f"Updating performance for {len(tickers)} active trackers...")
         
-        current_data = download_market_data(tickers, period="1d")
-        if current_data.empty:
+        history_data = download_market_data(tickers, period="1y")
+        if history_data.empty:
             return []
         
         results = []
@@ -223,12 +249,16 @@ class PerformanceTracker:
             ticker = row['ticker']
             try:
                 if len(tickers) == 1:
-                    price_now = current_data['Close'].iloc[-1]
+                    ticker_history = history_data.dropna(subset=['Close']).copy()
                 else:
-                    if ticker in current_data.columns.get_level_values(0):
-                        price_now = current_data[ticker]['Close'].iloc[-1]
-                    else:
+                    if ticker not in history_data.columns.get_level_values(0):
                         continue
+                    ticker_history = history_data[ticker].dropna(subset=['Close']).copy()
+
+                if ticker_history.empty:
+                    continue
+
+                price_now = float(ticker_history['Close'].iloc[-1])
                 
                 entry_price = float(row['entry_price'])
                 return_pct = ((price_now - entry_price) / entry_price) * 100
@@ -242,7 +272,10 @@ class PerformanceTracker:
                 df.at[index, 'strategy_return_pct'] = strategy_return_pct
                 df.at[index, 'days_tracked'] = days_passed
                 df.at[index, 'last_updated'] = now_str
-                
+                stop_loss_message = self._build_stop_loss_message(df.loc[index], ticker_history)
+                df.at[index, 'stop_loss_triggered'] = bool(stop_loss_message)
+                df.at[index, 'stop_loss_message'] = stop_loss_message
+
                 if days_passed >= 14:
                     df.at[index, 'status'] = 'completed'
                 
@@ -271,3 +304,30 @@ class PerformanceTracker:
                 
         active = df[mask].sort_values(by='date', ascending=False).head(25)
         return active.to_dict('records')
+
+    def _build_stop_loss_message(self, row: pd.Series, ticker_history: pd.DataFrame) -> Optional[str]:
+        if row.get('type') != 'buy':
+            return None
+
+        price_now = float(ticker_history['Close'].iloc[-1])
+        stop_loss_pct = row.get('stop_loss_threshold')
+        entry_price = row.get('entry_price')
+        messages: List[str] = []
+
+        if pd.notna(stop_loss_pct) and pd.notna(entry_price):
+            threshold_price = float(entry_price) * (1.0 - float(stop_loss_pct) / 100.0)
+            if float(price_now) <= threshold_price:
+                messages.append(f"已觸發固定停損 {float(stop_loss_pct):.2f}%")
+
+        ma_window = row.get('stop_loss_ma_window')
+        stop_loss_ticks = row.get('stop_loss_ticks')
+        tick_size = row.get('stop_loss_tick_size')
+        if pd.notna(ma_window) and int(ma_window) > 0 and len(ticker_history) >= int(ma_window):
+            ma_value = float(ticker_history['Close'].rolling(int(ma_window)).mean().iloc[-1])
+            threshold = ma_value - (float(stop_loss_ticks or 0) * float(tick_size or 0.01))
+            if float(price_now) < threshold:
+                messages.append(f"已觸發{int(ma_window)}日線下{int(stop_loss_ticks or 0)}檔")
+
+        if messages:
+            return " / ".join(messages)
+        return None

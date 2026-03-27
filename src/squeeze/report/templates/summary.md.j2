@@ -66,10 +66,10 @@
 ## 📈 買入標的績效追蹤 (14天)
 目前追蹤中之買入標的即時表現（同一檔股票合併為一列，顯示最新進場與平均成本）：
 
-| 最新進場 | 筆數 | 代碼 | 名稱 | 平均成本 | 目前價格 | 天數 | 目前報酬 (%) |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| 最新進場 | 筆數 | 代碼 | 名稱 | 平均成本 | 目前價格 | 天數 | 目前報酬 (%) | 停損警示 |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 {% for perf in tracking_buys %}
-| {{ perf.latest_entry_date }} | {{ perf.entries }} | **{{ perf.ticker }}** | {{ perf.name }} | {{ "%.2f"|format(perf.avg_entry_price) }} | {{ "%.2f"|format(perf.current_price) }} | {{ perf.days_tracked }} | **{{ "%.2f"|format(perf.return_pct) }}%** |
+| {{ perf.latest_entry_date }} | {{ perf.entries }} | **{{ perf.ticker }}** | {{ perf.name }} | {{ "%.2f"|format(perf.avg_entry_price) }} | {{ "%.2f"|format(perf.current_price) }} | {{ perf.days_tracked }} | **{{ "%.2f"|format(perf.return_pct) }}%** | {{ perf.stop_loss_message if perf.stop_loss_message else '-' }} |
 {% endfor %}
 {% endif %}
 

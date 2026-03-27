@@ -46,6 +46,7 @@ def run_signal_backtest(
     max_positions: int = 10,
     stop_loss_ma_window: Optional[int] = None,
     stop_loss_ticks: int = 0,
+    stop_loss_pct: Optional[float] = None,
     tick_size: float = 0.01,
     buy_signals: Optional[set[str]] = None,
     transaction_cost_bps: float = 0.0,
@@ -61,6 +62,8 @@ def run_signal_backtest(
         raise ValueError("stop_loss_ma_window must be positive when provided.")
     if stop_loss_ticks < 0:
         raise ValueError("stop_loss_ticks must be non-negative.")
+    if stop_loss_pct is not None and stop_loss_pct <= 0:
+        raise ValueError("stop_loss_pct must be positive when provided.")
     if tick_size <= 0:
         raise ValueError("tick_size must be positive.")
     if transaction_cost_bps < 0 or slippage_bps < 0:
@@ -194,9 +197,11 @@ def run_signal_backtest(
             signal = str(row["Signal"])
             if ticker in positions:
                 stop_loss_signal = _stop_loss_signal(
+                    position=positions[ticker],
                     row=row,
                     ma_window=stop_loss_ma_window,
                     stop_loss_ticks=stop_loss_ticks,
+                    stop_loss_pct=stop_loss_pct,
                     tick_size=tick_size,
                 )
                 exit_signal = stop_loss_signal or (signal if signal in SELL_SIGNALS else None)
@@ -244,6 +249,7 @@ def run_signal_backtest(
         "config": {
             "stop_loss_ma_window": stop_loss_ma_window,
             "stop_loss_ticks": stop_loss_ticks,
+            "stop_loss_pct": stop_loss_pct,
             "tick_size": tick_size,
             "buy_signals": sorted(buy_signals),
             "transaction_cost_bps": transaction_cost_bps,
@@ -287,6 +293,7 @@ def run_rolling_backtest(
     max_positions: int = 10,
     stop_loss_ma_window: Optional[int] = None,
     stop_loss_ticks: int = 0,
+    stop_loss_pct: Optional[float] = None,
     tick_size: float = 0.01,
     buy_signals: Optional[set[str]] = None,
     transaction_cost_bps: float = 0.0,
@@ -320,6 +327,7 @@ def run_rolling_backtest(
             max_positions=max_positions,
             stop_loss_ma_window=stop_loss_ma_window,
             stop_loss_ticks=stop_loss_ticks,
+            stop_loss_pct=stop_loss_pct,
             tick_size=tick_size,
             buy_signals=buy_signals,
             transaction_cost_bps=transaction_cost_bps,
@@ -369,6 +377,7 @@ def run_rolling_backtest(
             "max_positions": max_positions,
             "stop_loss_ma_window": stop_loss_ma_window,
             "stop_loss_ticks": stop_loss_ticks,
+            "stop_loss_pct": stop_loss_pct,
             "tick_size": tick_size,
             "buy_signals": sorted(buy_signals or BUY_SIGNALS),
             "transaction_cost_bps": transaction_cost_bps,
@@ -405,6 +414,8 @@ def render_backtest_report(report: Dict[str, Any]) -> str:
         lines.append(
             f"- Stop loss: close below {config['stop_loss_ma_window']}D MA by {config['stop_loss_ticks']} ticks"
         )
+    if config.get("stop_loss_pct"):
+        lines.append(f"- Fixed stop loss: exit when close falls {config['stop_loss_pct']:.2f}% below entry")
     if config.get("transaction_cost_bps") or config.get("slippage_bps"):
         lines.append(
             f"- Trading frictions: cost {config.get('transaction_cost_bps', 0):.2f} bps, slippage {config.get('slippage_bps', 0):.2f} bps per side"
@@ -484,6 +495,8 @@ def render_rolling_backtest_report(report: Dict[str, Any]) -> str:
         lines.append(
             f"- Stop loss: close below {config['stop_loss_ma_window']}D MA by {config['stop_loss_ticks']} ticks"
         )
+    if config.get("stop_loss_pct"):
+        lines.append(f"- Fixed stop loss: exit when close falls {config['stop_loss_pct']:.2f}% below entry")
     if config.get("transaction_cost_bps") or config.get("slippage_bps"):
         lines.append(
             f"- Trading frictions: cost {config.get('transaction_cost_bps', 0):.2f} bps, slippage {config.get('slippage_bps', 0):.2f} bps per side"
@@ -547,11 +560,17 @@ def _prepare_indicator_frames(price_data: pd.DataFrame, ticker_names: Dict[str, 
 
 
 def _stop_loss_signal(
+    position: Position,
     row: pd.Series,
     ma_window: Optional[int],
     stop_loss_ticks: int,
+    stop_loss_pct: Optional[float],
     tick_size: float,
 ) -> Optional[str]:
+    pct_signal = _fixed_stop_loss_signal(position, row, stop_loss_pct)
+    if pct_signal:
+        return pct_signal
+
     if not ma_window:
         return None
 
@@ -563,6 +582,24 @@ def _stop_loss_signal(
     threshold = float(ma_value) - (stop_loss_ticks * tick_size)
     if float(close_price) < threshold:
         return f"停損: 跌破{ma_window}日線下{stop_loss_ticks}檔"
+    return None
+
+
+def _fixed_stop_loss_signal(
+    position: Position,
+    row: pd.Series,
+    stop_loss_pct: Optional[float],
+) -> Optional[str]:
+    if stop_loss_pct is None:
+        return None
+
+    close_price = row.get("Close")
+    if pd.isna(close_price) or position.entry_price <= 0:
+        return None
+
+    threshold = position.entry_price * (1.0 - stop_loss_pct / 100.0)
+    if float(close_price) <= threshold:
+        return f"停損: 跌破固定比例{stop_loss_pct:.2f}%"
     return None
 
 

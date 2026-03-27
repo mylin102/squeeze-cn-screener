@@ -229,6 +229,9 @@ class ReportExporter:
             latest["entries"] = len(ordered_rows)
             latest["avg_entry_price"] = (sum(entry_prices) / len(entry_prices)) if entry_prices else latest.get("entry_price")
             latest["latest_entry_date"] = latest.get("date")
+            stop_loss_messages = [str(item.get("stop_loss_message")) for item in ordered_rows if item.get("stop_loss_message")]
+            latest["stop_loss_triggered"] = bool(stop_loss_messages)
+            latest["stop_loss_message"] = stop_loss_messages[0] if stop_loss_messages else ""
             summaries.append(latest)
 
         return sorted(

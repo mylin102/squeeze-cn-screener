@@ -147,6 +147,7 @@
                     <th>目前價</th>
                     <th>天數</th>
                     <th>報酬 (%)</th>
+                    <th>停損警示</th>
                 </tr>
             </thead>
             <tbody>
@@ -161,6 +162,9 @@
                     <td>{{ perf.days_tracked }}</td>
                     <td class="{{ 'positive' if perf.return_pct > 0 else 'negative' }}">
                         {{ "%.2f"|format(perf.return_pct) }}%
+                    </td>
+                    <td class="{{ 'negative' if perf.stop_loss_triggered else '' }}">
+                        {{ perf.stop_loss_message if perf.stop_loss_message else '-' }}
                     </td>
                 </tr>
                 {% endfor %}
