@@ -1,0 +1,55 @@
+# Squeeze 技術指標掃描 - 每日摘要
+**日期:** {{ date }}
+
+{% if buy_count > 0 %}
+## 🚀 買入建議標的 (Top 10)
+今日共有 **{{ buy_count }}** 檔標的符合 **買入/觀察** 篩選條件。
+
+| 股票代碼 | 名稱 | 操作建議 | Squeeze 狀態 | 動能 (Momentum) |
+| :--- | :--- | :--- | :--- | :--- |
+{% for item in buy_results %}
+| **{{ item.ticker }}** | {{ item.name }} | **{{ item.signal }}** | {{ '活躍' if item.squeeze_active else '非活躍' }} | {{ "%.4f"|format(item.momentum) if item.momentum else 'N/A' }} |
+{% endfor %}
+{% else %}
+## 今日無符合買入條件的標的
+目前的市場掃描中，尚無個股符合「強烈買入」、「買入」或「觀察」之動能條件。
+{% endif %}
+
+{% if sell_count > 0 %}
+---
+## ⚠️ 賣出建議標的 (Top 10)
+以下個股動能顯著轉弱或已跌破擠壓：
+
+| 股票代碼 | 名稱 | 操作建議 | 動能 (Momentum) | 能量 (Energy) |
+| :--- | :--- | :--- | :--- | :--- |
+{% for item in sell_results %}
+| **{{ item.ticker }}** | {{ item.name }} | **{{ item.signal }}** | {{ "%.4f"|format(item.momentum) if item.momentum else 'N/A' }} | {{ "%.1f"|format(item.energy) }} |
+{% endfor %}
+{% endif %}
+
+{% if tracking_buys %}
+---
+## 📈 買入標的績效追蹤 (14天)
+目前追蹤中之買入標的即時表現：
+
+| 進場日期 | 代碼 | 名稱 | 當時價格 | 目前價格 | 天數 | 目前報酬 (%) |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+{% for perf in tracking_buys %}
+| {{ perf.date }} | **{{ perf.ticker }}** | {{ perf.name }} | {{ "%.2f"|format(perf.entry_price) }} | {{ "%.2f"|format(perf.current_price) }} | {{ perf.days_tracked }} | **{{ "%.2f"|format(perf.return_pct) }}%** |
+{% endfor %}
+{% endif %}
+
+{% if tracking_sells %}
+---
+## 📉 賣出標的績效追蹤 (14天)
+目前追蹤中之賣出標的即時表現（報酬率負值代表價格下跌，符合預期）：
+
+| 建議日期 | 代碼 | 名稱 | 當時價格 | 目前價格 | 天數 | 價格變動 (%) |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+{% for perf in tracking_sells %}
+| {{ perf.date }} | **{{ perf.ticker }}** | {{ perf.name }} | {{ "%.2f"|format(perf.entry_price) }} | {{ "%.2f"|format(perf.current_price) }} | {{ perf.days_tracked }} | **{{ "%.2f"|format(perf.return_pct) }}%** |
+{% endfor %}
+{% endif %}
+
+---
+*由 Squeeze Stock Screener 自動生成*

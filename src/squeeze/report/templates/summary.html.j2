@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: 'Microsoft JhengHei', Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #2980b9; margin-top: 30px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f8f9fa; color: #2c3e50; }
+        .buy { color: #e74c3c; font-weight: bold; } /* Taiwan: Red for Buy */
+        .sell { color: #27ae60; font-weight: bold; } /* Taiwan: Green for Sell */
+        .positive { color: #e74c3c; font-weight: bold; }
+        .negative { color: #27ae60; font-weight: bold; }
+        .footer { font-size: 12px; color: #7f8c8d; margin-top: 40px; border-top: 1px solid #eee; padding-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Squeeze 技術指標掃描 - 每日摘要</h1>
+        <p><strong>日期:</strong> {{ date }}</p>
+
+        {% if buy_count > 0 %}
+        <h2>🚀 買入建議標的 (Top 10)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>代碼</th>
+                    <th>名稱</th>
+                    <th>操作建議</th>
+                    <th>Squeeze 狀態</th>
+                    <th>動能 (Momentum)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in buy_results %}
+                <tr>
+                    <td><strong>{{ item.ticker }}</strong></td>
+                    <td>{{ item.name }}</td>
+                    <td class="buy">{{ item.signal }}</td>
+                    <td>{{ '活躍' if item.squeeze_active else '非活躍' }}</td>
+                    <td>{{ "%.4f"|format(item.momentum) if item.momentum else 'N/A' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+        {% if sell_count > 0 %}
+        <h2>⚠️ 賣出建議標的 (Top 10)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>代碼</th>
+                    <th>名稱</th>
+                    <th>操作建議</th>
+                    <th>動能 (Momentum)</th>
+                    <th>能量 (Energy)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in sell_results %}
+                <tr>
+                    <td><strong>{{ item.ticker }}</strong></td>
+                    <td>{{ item.name }}</td>
+                    <td class="sell">{{ item.signal }}</td>
+                    <td>{{ "%.4f"|format(item.momentum) if item.momentum else 'N/A' }}</td>
+                    <td>{{ "%.1f"|format(item.energy) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+        {% if tracking_buys %}
+        <h2>📈 買入標的績效追蹤 (14天)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>進場日期</th>
+                    <th>代碼</th>
+                    <th>名稱</th>
+                    <th>進場價</th>
+                    <th>目前價</th>
+                    <th>天數</th>
+                    <th>報酬 (%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for perf in tracking_buys %}
+                <tr>
+                    <td>{{ perf.date }}</td>
+                    <td><strong>{{ perf.ticker }}</strong></td>
+                    <td>{{ perf.name }}</td>
+                    <td>{{ "%.2f"|format(perf.entry_price) }}</td>
+                    <td>{{ "%.2f"|format(perf.current_price) }}</td>
+                    <td>{{ perf.days_tracked }}</td>
+                    <td class="{{ 'positive' if perf.return_pct > 0 else 'negative' }}">
+                        {{ "%.2f"|format(perf.return_pct) }}%
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+        <div class="footer">
+            *由 Squeeze Stock Screener 自動生成。附件中包含 Top 15 潛力標的的 K 線分析圖。
+        </div>
+    </div>
+</body>
+</html>

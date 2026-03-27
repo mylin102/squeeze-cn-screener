@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "squeeze-cn"
+version = "1.1.0"
+description = "China A-share screener based on Squeeze Momentum logic"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "yfinance",
+    "pandas",
+    "pandas-ta",
+    "typer",
+    "requests",
+    "rich",
+    "mplfinance",
+    "jinja2",
+    "line-bot-sdk",
+    "tenacity",
+    "scipy",
+    "lxml",
+    "html5lib",
+]
+
+[project.scripts]
+squeeze-cn = "squeeze.cli:app"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["squeeze*"]
+
+[tool.setuptools.package-data]
+"squeeze.report.templates" = ["*.j2"]

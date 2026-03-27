@@ -1,0 +1,11 @@
+{
+  "project_name": "Squeeze Stock Screener",
+  "stack": "Python CLI",
+  "market": "Taiwan",
+  "automation": true,
+  "preferences": {
+    "testing_framework": "pytest",
+    "linting": "ruff",
+    "docs_format": "markdown"
+  }
+}
