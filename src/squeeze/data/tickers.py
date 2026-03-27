@@ -1,6 +1,34 @@
 import requests
 from typing import List, Dict
 
+FALLBACK_TICKER_MAP = {
+    "600519.SS": "Kweichow Moutai",
+    "601318.SS": "Ping An Insurance",
+    "600036.SS": "China Merchants Bank",
+    "600276.SS": "Jiangsu Hengrui Medicine",
+    "600309.SS": "Wanhua Chemical",
+    "600887.SS": "Yili",
+    "601899.SS": "Zijin Mining",
+    "603288.SS": "Foshan Haitian",
+    "688981.SS": "SMIC",
+    "688111.SS": "Beijing Kingsoft Office",
+    "000001.SZ": "Ping An Bank",
+    "000333.SZ": "Midea Group",
+    "000651.SZ": "Gree Electric",
+    "000858.SZ": "Wuliangye",
+    "000568.SZ": "Luzhou Laojiao",
+    "000725.SZ": "BOE",
+    "002594.SZ": "BYD",
+    "002415.SZ": "Hikvision",
+    "002475.SZ": "Luxshare Precision",
+    "002714.SZ": "Muyuan Foods",
+    "300059.SZ": "East Money Information",
+    "300124.SZ": "Shenzhen Inovance",
+    "300308.SZ": "CNGR Advanced Material",
+    "300750.SZ": "CATL",
+    "300760.SZ": "Mindray",
+}
+
 def fetch_tickers() -> List[str]:
     """
     Backward compatibility for existing code.
@@ -54,5 +82,9 @@ def fetch_tickers_with_names() -> Dict[str, str]:
             ticker_map[f"{code}{suffix}"] = name
     except Exception as e:
         print(f"Error fetching China A-share stocks: {e}")
+
+    if not ticker_map:
+        print("Falling back to built-in China A-share seed universe.")
+        return FALLBACK_TICKER_MAP.copy()
 
     return ticker_map

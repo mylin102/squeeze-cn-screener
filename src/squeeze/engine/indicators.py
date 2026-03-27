@@ -1,3 +1,8 @@
+import os
+
+# Work around pandas_ta/numba cache issues observed in local Python 3.13 setups.
+os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
+
 import pandas as pd
 import numpy as np
 import pandas_ta as ta
