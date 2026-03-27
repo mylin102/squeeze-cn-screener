@@ -78,10 +78,11 @@
         <table>
             <thead>
                 <tr>
-                    <th>進場日期</th>
+                    <th>最新進場</th>
+                    <th>筆數</th>
                     <th>代碼</th>
                     <th>名稱</th>
-                    <th>進場價</th>
+                    <th>平均成本</th>
                     <th>目前價</th>
                     <th>天數</th>
                     <th>報酬 (%)</th>
@@ -90,10 +91,11 @@
             <tbody>
                 {% for perf in tracking_buys %}
                 <tr>
-                    <td>{{ perf.date }}</td>
+                    <td>{{ perf.latest_entry_date }}</td>
+                    <td>{{ perf.entries }}</td>
                     <td><strong>{{ perf.ticker }}</strong></td>
                     <td>{{ perf.name }}</td>
-                    <td>{{ "%.2f"|format(perf.entry_price) }}</td>
+                    <td>{{ "%.2f"|format(perf.avg_entry_price) }}</td>
                     <td>{{ "%.2f"|format(perf.current_price) }}</td>
                     <td>{{ perf.days_tracked }}</td>
                     <td class="{{ 'positive' if perf.return_pct > 0 else 'negative' }}">

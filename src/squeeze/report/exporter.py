@@ -127,7 +127,7 @@ class ReportExporter:
             "buy_count": len(buy_results),
             "sell_results": [self._format_result(r) for r in top_sells],
             "sell_count": len(sell_results),
-            "tracking_buys": tracking_buys or [],
+            "tracking_buys": self._summarize_tracking_positions(tracking_buys or []),
             "tracking_sells": tracking_sells or []
         }
 
@@ -155,11 +155,39 @@ class ReportExporter:
             "buy_count": len(buy_results),
             "sell_results": [self._format_result(r) for r in top_sells],
             "sell_count": len(sell_results),
-            "tracking_buys": tracking_buys or [],
+            "tracking_buys": self._summarize_tracking_positions(tracking_buys or []),
             "tracking_sells": tracking_sells or []
         }
 
         return template.render(**render_data)
+
+    def _summarize_tracking_positions(self, tracking_rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        grouped: Dict[str, List[Dict[str, Any]]] = {}
+        for row in tracking_rows:
+            ticker = row.get("ticker")
+            if not ticker:
+                continue
+            grouped.setdefault(ticker, []).append(row)
+
+        summaries = []
+        for ticker, rows in grouped.items():
+            ordered_rows = sorted(
+                rows,
+                key=lambda item: (item.get("date") or "", item.get("last_updated") or ""),
+                reverse=True,
+            )
+            latest = dict(ordered_rows[0])
+            entry_prices = [float(item["entry_price"]) for item in ordered_rows if item.get("entry_price") is not None]
+            latest["entries"] = len(ordered_rows)
+            latest["avg_entry_price"] = (sum(entry_prices) / len(entry_prices)) if entry_prices else latest.get("entry_price")
+            latest["latest_entry_date"] = latest.get("date")
+            summaries.append(latest)
+
+        return sorted(
+            summaries,
+            key=lambda item: (item.get("latest_entry_date") or "", item.get("ticker") or ""),
+            reverse=True,
+        )
 
     def _format_result(self, r: Dict[str, Any]) -> Dict[str, Any]:
         """Ensures common keys exist for the template."""

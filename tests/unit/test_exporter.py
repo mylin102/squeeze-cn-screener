@@ -110,3 +110,75 @@ def test_export_empty_results(exporter, tmp_path):
     assert csv_path.exists()
     with open(csv_path, 'r', encoding='utf-8') as f:
         assert f.read() == ""
+
+def test_render_html_summary_groups_tracking_buys_by_ticker(exporter):
+    html = exporter.render_html_summary(
+        tracking_buys=[
+            {
+                "date": "2026-03-27",
+                "ticker": "600519.SS",
+                "name": "贵州茅台",
+                "entry_price": 1000.0,
+                "current_price": 1100.0,
+                "return_pct": 10.0,
+                "days_tracked": 2,
+                "last_updated": "2026-03-27",
+            },
+            {
+                "date": "2026-03-25",
+                "ticker": "600519.SS",
+                "name": "贵州茅台",
+                "entry_price": 900.0,
+                "current_price": 1100.0,
+                "return_pct": 22.22,
+                "days_tracked": 4,
+                "last_updated": "2026-03-27",
+            },
+            {
+                "date": "2026-03-26",
+                "ticker": "000001.SZ",
+                "name": "平安银行",
+                "entry_price": 200.0,
+                "current_price": 210.0,
+                "return_pct": 5.0,
+                "days_tracked": 3,
+                "last_updated": "2026-03-27",
+            },
+        ]
+    )
+
+    assert html.count("<strong>600519.SS</strong>") == 1
+    assert "2026-03-27" in html
+    assert ">2<" in html
+    assert "950.00" in html
+    assert "<strong>000001.SZ</strong>" in html
+
+def test_render_summary_groups_tracking_buys_by_ticker(exporter):
+    content = exporter.render_summary(
+        tracking_buys=[
+            {
+                "date": "2026-03-27",
+                "ticker": "600519.SS",
+                "name": "贵州茅台",
+                "entry_price": 1000.0,
+                "current_price": 1100.0,
+                "return_pct": 10.0,
+                "days_tracked": 2,
+                "last_updated": "2026-03-27",
+            },
+            {
+                "date": "2026-03-25",
+                "ticker": "600519.SS",
+                "name": "贵州茅台",
+                "entry_price": 900.0,
+                "current_price": 1100.0,
+                "return_pct": 22.22,
+                "days_tracked": 4,
+                "last_updated": "2026-03-27",
+            },
+        ]
+    )
+
+    assert content.count("**600519.SS**") == 1
+    assert "平均成本" in content
+    assert "| 2026-03-27 | 2 | **600519.SS** | 贵州茅台 | 950.00 | 1100.00 | 2 | **10.00%** |" in content
