@@ -1,0 +1,11 @@
+is_squeezed,energy_level,momentum,prev_momentum,squeeze_on,fired,Signal,Close,timestamp,ticker,name,has_houyi,has_whale,composite_score
+True,0,-0.24666595458984375,-0.4499994913736979,True,False,觀察 (跌勢收斂),103.08999633789062,2026-04-15 00:00:00,000568.SZ,Luzhou Laojiao,False,False,1
+True,0,1.2633336385091147,1.2100003560384116,True,False,買入 (動能增強),103.55000305175781,2026-04-15 00:00:00,000858.SZ,Wuliangye,False,False,2
+False,0,-3.2199999491373696,-3.5633316040039062,False,True,強烈賣出 (跌破),103.02999877929688,2026-04-15 00:00:00,002594.SZ,BYD,False,False,0
+True,0,0.21333312988281247,1.3033320109049478,True,False,觀望 (動能減弱),70.76000213623047,2026-04-15 00:00:00,002812.SZ,Yunnan Energy New Material,False,False,0
+True,0,0.326666514078776,-0.3133341471354166,True,False,買入 (動能增強),67.9000015258789,2026-04-15 00:00:00,300124.SZ,Shenzhen Inovance,False,False,2
+True,0,-0.015000025431315102,-0.17500019073486328,True,False,觀察 (跌勢收斂),17.190000534057617,2026-04-15 00:00:00,300498.SZ,Wens Foodstuffs,False,False,1
+True,0,0.026666641235351562,-0.18000030517578125,True,False,買入 (動能增強),39.900001525878906,2026-04-15 00:00:00,600036.SS,China Merchants Bank,False,False,2
+True,0,-0.08166631062825519,-0.1316661834716797,True,False,觀察 (跌勢收斂),18.700000762939453,2026-04-15 00:00:00,601166.SS,Industrial Bank,False,False,1
+False,0,0.009999910990397133,-0.02833342552185058,False,True,強烈買入 (爆發),7.5,2026-04-15 00:00:00,601398.SS,Industrial and Commercial Bank of China,False,False,3
+True,0,0.9499994913736979,-0.11833445231119799,True,False,買入 (動能增強),114.0,2026-04-15 00:00:00,688271.SS,United Nova Technology,False,False,2
