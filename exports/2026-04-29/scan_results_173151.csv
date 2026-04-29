@@ -1,0 +1,8 @@
+is_squeezed,energy_level,momentum,prev_momentum,squeeze_on,fired,Signal,Close,timestamp,ticker,name,has_houyi,has_whale,composite_score
+True,0,-1.3866666158040364,-1.5233332316080728,True,False,觀察 (跌勢收斂),67.58999633789062,2026-04-29 00:00:00,300124.SZ,Shenzhen Inovance,False,False,1
+True,0,2.9433339436848955,0.60833740234375,True,False,買入 (動能增強),168.39999389648438,2026-04-29 00:00:00,300760.SZ,Mindray,False,False,2
+False,0,0.15833409627278644,0.2566674550374349,False,True,強烈買入 (爆發),38.5,2026-04-29 00:00:00,600036.SS,China Merchants Bank,False,False,3
+True,0,-1.0116666158040364,-1.2466665903727212,True,False,觀察 (跌勢收斂),54.9900016784668,2026-04-29 00:00:00,600276.SS,Jiangsu Hengrui Medicine,False,False,1
+True,0,0.08666737874348951,-2.3449986775716143,True,False,買入 (動能增強),143.13999938964844,2026-04-29 00:00:00,600809.SS,Shanxi Fenjiu,False,False,2
+True,0,-0.06666692097981775,-0.21833356221516925,True,False,觀察 (跌勢收斂),59.43000030517578,2026-04-29 00:00:00,601318.SS,Ping An Insurance,False,False,1
+True,0,1.868334452311198,2.313334147135417,True,False,觀望 (動能減弱),112.47000122070312,2026-04-29 00:00:00,688271.SS,United Nova Technology,False,False,0
