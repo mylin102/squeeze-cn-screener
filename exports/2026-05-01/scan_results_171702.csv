@@ -1,0 +1,7 @@
+is_squeezed,energy_level,momentum,prev_momentum,squeeze_on,fired,Signal,Close,timestamp,ticker,name,has_houyi,has_whale,composite_score
+True,0,-1.6133346557617185,-1.3866666158040364,True,False,賣出 (動能轉弱),68.5999984741211,2026-04-30 00:00:00,300124.SZ,Shenzhen Inovance,False,False,0
+False,0,4.066663106282552,2.9433339436848955,False,True,強烈買入 (爆發),168.39999389648438,2026-04-30 00:00:00,300760.SZ,Mindray,False,False,3
+True,0,-1.238332748413086,-1.0116666158040364,True,False,賣出 (動能轉弱),53.880001068115234,2026-04-30 00:00:00,600276.SS,Jiangsu Hengrui Medicine,False,False,0
+True,0,1.600001017252604,0.08666737874348951,True,False,買入 (動能增強),143.35000610351562,2026-04-30 00:00:00,600809.SS,Shanxi Fenjiu,False,False,2
+True,0,-0.13000043233235678,-0.06666692097981775,True,False,賣出 (動能轉弱),59.369998931884766,2026-04-30 00:00:00,601318.SS,Ping An Insurance,False,False,0
+True,0,0.3283348083496095,1.868334452311198,True,False,觀望 (動能減弱),109.94999694824219,2026-04-30 00:00:00,688271.SS,United Nova Technology,False,False,0
