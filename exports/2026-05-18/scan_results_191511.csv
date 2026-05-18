@@ -1,0 +1,6 @@
+is_squeezed,energy_level,momentum,prev_momentum,squeeze_on,fired,Signal,Close,timestamp,ticker,name,has_houyi,has_whale,composite_score
+True,0,-0.008333365122477213,0.016666650772094723,True,False,賣出 (動能轉弱),4.210000038146973,2026-05-18 00:00:00,000725.SZ,BOE,False,False,0
+True,0,-0.48999913533528644,-0.028332392374674553,True,False,賣出 (動能轉弱),48.709999084472656,2026-05-18 00:00:00,002230.SZ,iFLYTEK,False,False,0
+True,0,0.9299999872843424,1.0266666412353516,True,False,觀望 (動能減弱),25.809999465942383,2026-05-18 00:00:00,002241.SZ,Goertek,False,False,0
+True,0,-7.035120646158854,-4.1427663167317705,True,False,賣出 (動能轉弱),417.2300109863281,2026-05-18 00:00:00,300750.SZ,CATL,False,False,0
+True,0,-0.1304808457692464,-0.10215226809183756,True,False,賣出 (動能轉弱),7.190000057220459,2026-05-18 00:00:00,601398.SS,Industrial and Commercial Bank of China,False,False,0
