@@ -1,0 +1,7 @@
+is_squeezed,energy_level,momentum,prev_momentum,squeeze_on,fired,Signal,Close,timestamp,ticker,name,has_houyi,has_whale,composite_score
+True,1,0.04166658719380697,0.01833327611287435,True,False,買入 (動能增強),4.260000228881836,2026-05-20 00:00:00,000725.SZ,BOE,False,False,2
+True,0,1.6699994405110676,1.7366650899251301,True,False,觀望 (動能減弱),81.5,2026-05-20 00:00:00,000333.SZ,Midea Group,False,True,2
+True,0,-0.7433331807454426,-0.7249991099039712,True,False,賣出 (動能轉弱),48.0,2026-05-20 00:00:00,002230.SZ,iFLYTEK,False,False,0
+True,0,0.9583330154418944,1.009999910990397,True,False,觀望 (動能減弱),25.079999923706055,2026-05-20 00:00:00,002241.SZ,Goertek,False,False,0
+True,0,-15.524998982747395,-12.04883321126302,True,False,賣出 (動能轉弱),414.75,2026-05-20 00:00:00,300750.SZ,CATL,False,False,0
+True,0,-0.13660009702046713,-0.13085230191548664,True,False,賣出 (動能轉弱),7.130000114440918,2026-05-20 00:00:00,601398.SS,Industrial and Commercial Bank of China,False,False,0
