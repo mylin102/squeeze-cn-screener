@@ -1,0 +1,88 @@
+{
+  "metadata": {
+    "timestamp": "2026-05-28T19:05:40.085687+08:00",
+    "count": 5
+  },
+  "results": [
+    {
+      "is_squeezed": true,
+      "energy_level": 0,
+      "momentum": -0.3983332316080729,
+      "prev_momentum": -0.176666259765625,
+      "squeeze_on": true,
+      "fired": false,
+      "Signal": "賣出 (動能轉弱)",
+      "Close": 78.94999694824219,
+      "timestamp": "2026-05-28 00:00:00",
+      "ticker": "000333.SZ",
+      "name": "Midea Group",
+      "has_houyi": false,
+      "has_whale": false,
+      "composite_score": 0
+    },
+    {
+      "is_squeezed": true,
+      "energy_level": 0,
+      "momentum": -0.7383333841959636,
+      "prev_momentum": -0.798333485921224,
+      "squeeze_on": true,
+      "fired": false,
+      "Signal": "觀察 (跌勢收斂)",
+      "Close": 49.130001068115234,
+      "timestamp": "2026-05-28 00:00:00",
+      "ticker": "002230.SZ",
+      "name": "iFLYTEK",
+      "has_houyi": false,
+      "has_whale": false,
+      "composite_score": 1
+    },
+    {
+      "is_squeezed": false,
+      "energy_level": 0,
+      "momentum": 5.7250016530354815,
+      "prev_momentum": 4.273335138956705,
+      "squeeze_on": false,
+      "fired": true,
+      "Signal": "強烈買入 (爆發)",
+      "Close": 75.0,
+      "timestamp": "2026-05-28 00:00:00",
+      "ticker": "601138.SS",
+      "name": "Foxconn Industrial Internet",
+      "has_houyi": false,
+      "has_whale": false,
+      "composite_score": 3
+    },
+    {
+      "is_squeezed": true,
+      "energy_level": 0,
+      "momentum": -0.12711620330810547,
+      "prev_momentum": -0.11048714319864908,
+      "squeeze_on": true,
+      "fired": false,
+      "Signal": "賣出 (動能轉弱)",
+      "Close": 7.039999961853027,
+      "timestamp": "2026-05-28 00:00:00",
+      "ticker": "601398.SS",
+      "name": "Industrial and Commercial Bank of China",
+      "has_houyi": false,
+      "has_whale": false,
+      "composite_score": 0
+    },
+    {
+      "is_squeezed": true,
+      "energy_level": 0,
+      "momentum": 4.241667429606119,
+      "prev_momentum": 4.428334554036458,
+      "squeeze_on": true,
+      "fired": false,
+      "Signal": "觀望 (動能減弱)",
+      "Close": 101.9000015258789,
+      "timestamp": "2026-05-28 00:00:00",
+      "ticker": "603501.SS",
+      "name": "Will Semiconductor",
+      "has_houyi": false,
+      "has_whale": false,
+      "composite_score": 0
+    }
+  ]
+}

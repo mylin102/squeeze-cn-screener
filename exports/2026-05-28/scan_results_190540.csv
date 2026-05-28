@@ -1,0 +1,6 @@
+is_squeezed,energy_level,momentum,prev_momentum,squeeze_on,fired,Signal,Close,timestamp,ticker,name,has_houyi,has_whale,composite_score
+True,0,-0.3983332316080729,-0.176666259765625,True,False,賣出 (動能轉弱),78.94999694824219,2026-05-28 00:00:00,000333.SZ,Midea Group,False,False,0
+True,0,-0.7383333841959636,-0.798333485921224,True,False,觀察 (跌勢收斂),49.130001068115234,2026-05-28 00:00:00,002230.SZ,iFLYTEK,False,False,1
+False,0,5.7250016530354815,4.273335138956705,False,True,強烈買入 (爆發),75.0,2026-05-28 00:00:00,601138.SS,Foxconn Industrial Internet,False,False,3
+True,0,-0.12711620330810547,-0.11048714319864908,True,False,賣出 (動能轉弱),7.039999961853027,2026-05-28 00:00:00,601398.SS,Industrial and Commercial Bank of China,False,False,0
+True,0,4.241667429606119,4.428334554036458,True,False,觀望 (動能減弱),101.9000015258789,2026-05-28 00:00:00,603501.SS,Will Semiconductor,False,False,0
