@@ -1,0 +1,5 @@
+is_squeezed,energy_level,momentum,prev_momentum,squeeze_on,fired,Signal,Close,timestamp,ticker,name,has_houyi,has_whale,composite_score
+True,0,-0.378332773844401,-0.3866666158040364,True,False,觀察 (跌勢收斂),81.69999694824219,2026-06-01 00:00:00,000333.SZ,Midea Group,False,False,1
+True,0,-0.2916666666666667,-0.8900000254313152,True,False,觀察 (跌勢收斂),49.13999938964844,2026-06-01 00:00:00,002230.SZ,iFLYTEK,False,False,1
+True,0,-0.10451833407084148,-0.10682002703348796,True,False,觀察 (跌勢收斂),7.300000190734863,2026-06-01 00:00:00,601398.SS,Industrial and Commercial Bank of China,False,False,1
+False,0,0.16000111897786473,2.0966669718424478,False,True,強烈買入 (爆發),92.2300033569336,2026-06-01 00:00:00,603501.SS,Will Semiconductor,False,False,3

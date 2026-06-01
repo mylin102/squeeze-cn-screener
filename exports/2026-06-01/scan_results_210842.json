@@ -1,0 +1,72 @@
+{
+  "metadata": {
+    "timestamp": "2026-06-01T21:08:42.929962+08:00",
+    "count": 4
+  },
+  "results": [
+    {
+      "is_squeezed": true,
+      "energy_level": 0,
+      "momentum": -0.378332773844401,
+      "prev_momentum": -0.3866666158040364,
+      "squeeze_on": true,
+      "fired": false,
+      "Signal": "觀察 (跌勢收斂)",
+      "Close": 81.69999694824219,
+      "timestamp": "2026-06-01 00:00:00",
+      "ticker": "000333.SZ",
+      "name": "Midea Group",
+      "has_houyi": false,
+      "has_whale": false,
+      "composite_score": 1
+    },
+    {
+      "is_squeezed": true,
+      "energy_level": 0,
+      "momentum": -0.2916666666666667,
+      "prev_momentum": -0.8900000254313152,
+      "squeeze_on": true,
+      "fired": false,
+      "Signal": "觀察 (跌勢收斂)",
+      "Close": 49.13999938964844,
+      "timestamp": "2026-06-01 00:00:00",
+      "ticker": "002230.SZ",
+      "name": "iFLYTEK",
+      "has_houyi": false,
+      "has_whale": false,
+      "composite_score": 1
+    },
+    {
+      "is_squeezed": true,
+      "energy_level": 0,
+      "momentum": -0.10451833407084148,
+      "prev_momentum": -0.10682002703348796,
+      "squeeze_on": true,
+      "fired": false,
+      "Signal": "觀察 (跌勢收斂)",
+      "Close": 7.300000190734863,
+      "timestamp": "2026-06-01 00:00:00",
+      "ticker": "601398.SS",
+      "name": "Industrial and Commercial Bank of China",
+      "has_houyi": false,
+      "has_whale": false,
+      "composite_score": 1
+    },
+    {
+      "is_squeezed": false,
+      "energy_level": 0,
+      "momentum": 0.16000111897786473,
+      "prev_momentum": 2.0966669718424478,
+      "squeeze_on": false,
+      "fired": true,
+      "Signal": "強烈買入 (爆發)",
+      "Close": 92.2300033569336,
+      "timestamp": "2026-06-01 00:00:00",
+      "ticker": "603501.SS",
+      "name": "Will Semiconductor",
+      "has_houyi": false,
+      "has_whale": false,
+      "composite_score": 3
+    }
+  ]
+}
