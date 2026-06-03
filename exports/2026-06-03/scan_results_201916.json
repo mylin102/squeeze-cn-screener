@@ -1,0 +1,88 @@
+{
+  "metadata": {
+    "timestamp": "2026-06-03T20:19:16.044999+08:00",
+    "count": 5
+  },
+  "results": [
+    {
+      "is_squeezed": true,
+      "energy_level": 0,
+      "momentum": -0.26833343505859375,
+      "prev_momentum": -0.3733329772949218,
+      "squeeze_on": true,
+      "fired": false,
+      "Signal": "觀察 (跌勢收斂)",
+      "Close": 82.61000061035156,
+      "timestamp": "2026-06-03 00:00:00",
+      "ticker": "000333.SZ",
+      "name": "Midea Group",
+      "has_houyi": false,
+      "has_whale": false,
+      "composite_score": 1
+    },
+    {
+      "is_squeezed": true,
+      "energy_level": 0,
+      "momentum": 0.021666208902994782,
+      "prev_momentum": 0.11166636149088544,
+      "squeeze_on": true,
+      "fired": false,
+      "Signal": "觀望 (動能減弱)",
+      "Close": 47.5099983215332,
+      "timestamp": "2026-06-03 00:00:00",
+      "ticker": "002230.SZ",
+      "name": "iFLYTEK",
+      "has_houyi": false,
+      "has_whale": false,
+      "composite_score": 0
+    },
+    {
+      "is_squeezed": true,
+      "energy_level": 0,
+      "momentum": -3.0850003560384107,
+      "prev_momentum": -3.208334604899088,
+      "squeeze_on": true,
+      "fired": false,
+      "Signal": "觀察 (跌勢收斂)",
+      "Close": 74.80000305175781,
+      "timestamp": "2026-06-03 00:00:00",
+      "ticker": "002475.SZ",
+      "name": "Luxshare Precision",
+      "has_houyi": false,
+      "has_whale": false,
+      "composite_score": 1
+    },
+    {
+      "is_squeezed": true,
+      "energy_level": 0,
+      "momentum": -0.4433326721191406,
+      "prev_momentum": 0.7866668701171875,
+      "squeeze_on": true,
+      "fired": false,
+      "Signal": "賣出 (動能轉弱)",
+      "Close": 75.86000061035156,
+      "timestamp": "2026-06-03 00:00:00",
+      "ticker": "300124.SZ",
+      "name": "Shenzhen Inovance",
+      "has_houyi": false,
+      "has_whale": false,
+      "composite_score": 0
+    },
+    {
+      "is_squeezed": true,
+      "energy_level": 0,
+      "momentum": -0.045404275258382164,
+      "prev_momentum": -0.07899626096089682,
+      "squeeze_on": true,
+      "fired": false,
+      "Signal": "觀察 (跌勢收斂)",
+      "Close": 7.28000020980835,
+      "timestamp": "2026-06-03 00:00:00",
+      "ticker": "601398.SS",
+      "name": "Industrial and Commercial Bank of China",
+      "has_houyi": false,
+      "has_whale": false,
+      "composite_score": 1
+    }
+  ]
+}
