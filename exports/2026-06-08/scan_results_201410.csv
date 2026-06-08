@@ -1,0 +1,7 @@
+is_squeezed,energy_level,momentum,prev_momentum,squeeze_on,fired,Signal,Close,timestamp,ticker,name,has_houyi,has_whale,composite_score
+True,1,-1.5506223042805989,-1.5083084106445312,True,False,賣出 (動能轉弱),74.5199966430664,2026-06-08 00:00:00,300124.SZ,Shenzhen Inovance,False,False,0
+True,0,0.013333002726236998,-0.6683336893717446,True,False,買入 (動能增強),36.810001373291016,2026-06-08 00:00:00,000063.SZ,ZTE,False,True,4
+True,0,0.44333267211914057,0.2966664632161458,True,False,買入 (動能增強),82.8499984741211,2026-06-08 00:00:00,000333.SZ,Midea Group,False,False,2
+False,0,-1.1583340962727862,-0.8950004577636718,False,True,強烈賣出 (跌破),44.119998931884766,2026-06-08 00:00:00,002230.SZ,iFLYTEK,False,False,0
+True,0,-0.6050020853678385,-1.4600016276041667,True,False,觀察 (跌勢收斂),66.13999938964844,2026-06-08 00:00:00,002475.SZ,Luxshare Precision,True,False,2
+False,0,0.12000004450480142,0.06000002225240071,False,True,強烈買入 (爆發),7.5,2026-06-08 00:00:00,601398.SS,Industrial and Commercial Bank of China,False,False,3
