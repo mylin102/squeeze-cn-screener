@@ -1,0 +1,7 @@
+is_squeezed,energy_level,momentum,prev_momentum,squeeze_on,fired,Signal,Close,timestamp,ticker,name,has_houyi,has_whale,composite_score
+True,1,-2.2087631225585938,-1.5506223042805989,True,False,賣出 (動能轉弱),74.5999984741211,2026-06-09 00:00:00,300124.SZ,Shenzhen Inovance,False,False,0
+True,0,1.0066668192545571,0.013333002726236998,True,False,買入 (動能增強),39.13999938964844,2026-06-09 00:00:00,000063.SZ,ZTE,False,True,4
+True,0,0.8083330790201821,0.44333267211914057,True,False,買入 (動能增強),82.36000061035156,2026-06-09 00:00:00,000333.SZ,Midea Group,False,False,2
+True,0,-0.33333587646484375,-0.6050020853678385,True,False,觀察 (跌勢收斂),69.33999633789062,2026-06-09 00:00:00,002475.SZ,Luxshare Precision,False,False,1
+True,0,-0.5933332443237305,-0.6999998092651367,True,False,觀察 (跌勢收斂),25.520000457763672,2026-06-09 00:00:00,600030.SS,CITIC Securities,False,False,1
+True,0,-0.9033336639404298,-1.3783334096272786,True,False,觀察 (跌勢收斂),57.380001068115234,2026-06-09 00:00:00,601888.SS,China Tourism Group Duty Free,False,False,1
