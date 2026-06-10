@@ -1,0 +1,8 @@
+is_squeezed,energy_level,momentum,prev_momentum,squeeze_on,fired,Signal,Close,timestamp,ticker,name,has_houyi,has_whale,composite_score
+True,0,1.4850006103515625,0.8083330790201821,True,False,買入 (動能增強),83.9000015258789,2026-06-10 00:00:00,000333.SZ,Midea Group,False,False,2
+True,0,1.4333330790201821,1.0066668192545571,True,False,買入 (動能增強),38.41999816894531,2026-06-10 00:00:00,000063.SZ,ZTE,False,True,4
+True,0,-1.8650016784667969,-0.33333587646484375,True,False,賣出 (動能轉弱),65.51000213623047,2026-06-10 00:00:00,002475.SZ,Luxshare Precision,True,False,1
+True,0,-3.4364344278971353,-2.2087631225585938,True,False,賣出 (動能轉弱),70.0999984741211,2026-06-10 00:00:00,300124.SZ,Shenzhen Inovance,True,False,1
+True,0,-0.4757356643676757,-0.5838015874226888,True,False,觀察 (跌勢收斂),25.65999984741211,2026-06-10 00:00:00,600030.SS,CITIC Securities,False,False,1
+True,0,-0.35166676839192706,-0.9033336639404298,True,False,觀察 (跌勢收斂),58.04999923706055,2026-06-10 00:00:00,601888.SS,China Tourism Group Duty Free,False,False,1
+True,0,-4.890379587809244,-4.533864339192708,True,False,賣出 (動能轉弱),97.04000091552734,2026-06-10 00:00:00,603259.SS,WuXi AppTec,True,False,1
