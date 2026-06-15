@@ -1,0 +1,7 @@
+is_squeezed,energy_level,momentum,prev_momentum,squeeze_on,fired,Signal,Close,timestamp,ticker,name,has_houyi,has_whale,composite_score
+True,1,1.5650011698404946,0.7433338165283203,True,False,買入 (動能增強),59.08000183105469,2026-06-15 00:00:00,601888.SS,China Tourism Group Duty Free,False,False,2
+True,0,1.7249997456868489,2.2299995422363277,True,False,觀望 (動能減弱),37.220001220703125,2026-06-15 00:00:00,000063.SZ,ZTE,False,True,2
+True,0,0.22357527414957684,-0.16320514678955078,True,False,買入 (動能增強),26.860000610351562,2026-06-15 00:00:00,600030.SS,CITIC Securities,False,False,2
+True,0,-0.04358641306559245,-0.18059444427490234,True,False,觀察 (跌勢收斂),25.40999984741211,2026-06-15 00:00:00,600887.SS,Yili,False,False,1
+True,0,1.1159782409667969,0.4372812906901042,True,False,買入 (動能增強),54.22999954223633,2026-06-15 00:00:00,601318.SS,Ping An Insurance,False,False,2
+True,0,-4.323810577392578,-5.169471740722656,True,False,觀察 (跌勢收斂),99.37000274658203,2026-06-15 00:00:00,603259.SS,WuXi AppTec,False,False,1
