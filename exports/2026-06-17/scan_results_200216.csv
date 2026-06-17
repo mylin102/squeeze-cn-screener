@@ -1,0 +1,8 @@
+is_squeezed,energy_level,momentum,prev_momentum,squeeze_on,fired,Signal,Close,timestamp,ticker,name,has_houyi,has_whale,composite_score
+True,0,1.4483331044514973,1.6083329518636067,True,False,觀望 (動能減弱),37.63999938964844,2026-06-17 00:00:00,000063.SZ,ZTE,False,True,2
+True,0,-0.36816469828287757,-0.16434955596923828,True,False,賣出 (動能轉弱),24.670000076293945,2026-06-17 00:00:00,600887.SS,Yili,False,False,0
+True,0,1.4508501688639321,1.3815975189208982,True,False,買入 (動能增強),52.7599983215332,2026-06-17 00:00:00,601318.SS,Ping An Insurance,False,False,2
+True,0,0.8800010681152343,1.310000737508138,True,False,觀望 (動能減弱),56.83000183105469,2026-06-17 00:00:00,601888.SS,China Tourism Group Duty Free,False,False,0
+True,0,-2.6174939473470054,-3.797644297281901,True,False,觀察 (跌勢收斂),98.19999694824219,2026-06-17 00:00:00,603259.SS,WuXi AppTec,True,False,2
+True,0,-0.7604363759358723,-0.5612780253092448,True,False,賣出 (動能轉弱),33.31999969482422,2026-06-17 00:00:00,603288.SS,Foshan Haitian,False,False,0
+False,0,18.22500610351562,3.958648681640624,False,True,強烈買入 (爆發),586.0399780273438,2026-06-17 00:00:00,603986.SS,GigaDevice,False,False,3
