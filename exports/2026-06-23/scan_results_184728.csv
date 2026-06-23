@@ -1,0 +1,7 @@
+is_squeezed,energy_level,momentum,prev_momentum,squeeze_on,fired,Signal,Close,timestamp,ticker,name,has_houyi,has_whale,composite_score
+True,0,1.265000025431315,1.4750003814697266,True,False,觀望 (動能減弱),38.0099983215332,2026-06-23 00:00:00,000063.SZ,ZTE,False,True,2
+True,0,0.018333276112874358,0.0433332125345866,True,False,觀望 (動能減弱),9.279999732971191,2026-06-23 00:00:00,600000.SS,Shanghai Pudong Development Bank,False,False,0
+True,0,-0.10166676839192706,-0.806666056315104,True,False,觀察 (跌勢收斂),48.97999954223633,2026-06-23 00:00:00,600276.SS,Jiangsu Hengrui Medicine,False,False,1
+True,0,0.22012837727864573,0.8153438568115233,True,False,觀望 (動能減弱),50.400001525878906,2026-06-23 00:00:00,601318.SS,Ping An Insurance,False,False,0
+True,0,-0.028331756591796903,0.280001958211263,True,False,賣出 (動能轉弱),56.0,2026-06-23 00:00:00,601888.SS,China Tourism Group Duty Free,False,False,0
+True,0,-0.6943505605061849,-0.9366575876871743,True,False,觀察 (跌勢收斂),34.18000030517578,2026-06-23 00:00:00,603288.SS,Foshan Haitian,False,False,1
