@@ -1,0 +1,88 @@
+{
+  "metadata": {
+    "timestamp": "2026-06-25T18:25:11.794366+08:00",
+    "count": 5
+  },
+  "results": [
+    {
+      "is_squeezed": true,
+      "energy_level": 0,
+      "momentum": 1.2183322906494138,
+      "prev_momentum": 1.1599992116292315,
+      "squeeze_on": true,
+      "fired": false,
+      "Signal": "買入 (動能增強)",
+      "Close": 38.439998626708984,
+      "timestamp": "2026-06-25 00:00:00",
+      "ticker": "000063.SZ",
+      "name": "ZTE",
+      "has_houyi": false,
+      "has_whale": true,
+      "composite_score": 4
+    },
+    {
+      "is_squeezed": true,
+      "energy_level": 0,
+      "momentum": 1.6033331553141275,
+      "prev_momentum": 0.44666608174641914,
+      "squeeze_on": true,
+      "fired": false,
+      "Signal": "買入 (動能增強)",
+      "Close": 50.040000915527344,
+      "timestamp": "2026-06-25 00:00:00",
+      "ticker": "600276.SS",
+      "name": "Jiangsu Hengrui Medicine",
+      "has_houyi": false,
+      "has_whale": false,
+      "composite_score": 2
+    },
+    {
+      "is_squeezed": true,
+      "energy_level": 0,
+      "momentum": -0.07166926066080714,
+      "prev_momentum": -1.2400016784667969,
+      "squeeze_on": true,
+      "fired": false,
+      "Signal": "觀察 (跌勢收斂)",
+      "Close": 76.98999786376953,
+      "timestamp": "2026-06-25 00:00:00",
+      "ticker": "601138.SS",
+      "name": "Foxconn Industrial Internet",
+      "has_houyi": false,
+      "has_whale": false,
+      "composite_score": 1
+    },
+    {
+      "is_squeezed": true,
+      "energy_level": 0,
+      "momentum": -1.2799994150797527,
+      "prev_momentum": -1.1783326466878257,
+      "squeeze_on": true,
+      "fired": false,
+      "Signal": "賣出 (動能轉弱)",
+      "Close": 55.65999984741211,
+      "timestamp": "2026-06-25 00:00:00",
+      "ticker": "601888.SS",
+      "name": "China Tourism Group Duty Free",
+      "has_houyi": false,
+      "has_whale": false,
+      "composite_score": 0
+    },
+    {
+      "is_squeezed": true,
+      "energy_level": 0,
+      "momentum": -0.021021525065104157,
+      "prev_momentum": -0.3440786997477214,
+      "squeeze_on": true,
+      "fired": false,
+      "Signal": "觀察 (跌勢收斂)",
+      "Close": 33.91999816894531,
+      "timestamp": "2026-06-25 00:00:00",
+      "ticker": "603288.SS",
+      "name": "Foshan Haitian",
+      "has_houyi": false,
+      "has_whale": false,
+      "composite_score": 1
+    }
+  ]
+}
