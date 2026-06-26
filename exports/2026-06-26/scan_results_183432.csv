@@ -1,0 +1,6 @@
+is_squeezed,energy_level,momentum,prev_momentum,squeeze_on,fired,Signal,Close,timestamp,ticker,name,has_houyi,has_whale,composite_score
+True,0,0.21666526794433594,1.2183322906494138,True,False,觀望 (動能減弱),35.66999816894531,2026-06-26 00:00:00,000063.SZ,ZTE,False,True,2
+True,0,2.348332087198893,1.6033331553141275,True,False,買入 (動能增強),48.66999816894531,2026-06-26 00:00:00,600276.SS,Jiangsu Hengrui Medicine,False,False,2
+False,0,-0.6400019327799478,-0.07166926066080714,False,True,強烈賣出 (跌破),70.22000122070312,2026-06-26 00:00:00,601138.SS,Foxconn Industrial Internet,False,False,0
+True,0,-1.6483332316080728,-1.2799994150797527,True,False,賣出 (動能轉弱),53.31999969482422,2026-06-26 00:00:00,601888.SS,China Tourism Group Duty Free,False,False,0
+True,0,0.055901209513346345,-0.021021525065104157,True,False,買入 (動能增強),32.97999954223633,2026-06-26 00:00:00,603288.SS,Foshan Haitian,False,False,2
