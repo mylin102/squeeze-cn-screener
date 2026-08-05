@@ -1,0 +1,5 @@
+is_squeezed,energy_level,momentum,prev_momentum,squeeze_on,fired,Signal,Close,timestamp,ticker,name,has_houyi,has_whale,composite_score
+False,0,0.3249998887379964,0.1933332284291585,False,True,強烈買入 (爆發),4.940000057220459,2026-08-05 00:00:00,002355.SZ,兴民智通,False,False,3
+False,0,4.548332850138346,2.7616659800211587,False,True,強烈買入 (爆發),44.709999084472656,2026-08-05 00:00:00,300139.SZ,晓程科技,False,False,3
+True,0,0.46500047047932946,0.39666700363159174,True,False,買入 (動能增強),12.5,2026-08-05 00:00:00,300654.SZ,世纪天鸿,False,False,2
+False,0,1.1050004959106445,0.2350006103515625,False,True,強烈買入 (爆發),21.489999771118164,2026-08-05 00:00:00,301026.SZ,浩通科技,False,False,3

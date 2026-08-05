@@ -1,0 +1,72 @@
+{
+  "metadata": {
+    "timestamp": "2026-08-05T18:05:55.417489+08:00",
+    "count": 4
+  },
+  "results": [
+    {
+      "is_squeezed": false,
+      "energy_level": 0,
+      "momentum": 0.3249998887379964,
+      "prev_momentum": 0.1933332284291585,
+      "squeeze_on": false,
+      "fired": true,
+      "Signal": "強烈買入 (爆發)",
+      "Close": 4.940000057220459,
+      "timestamp": "2026-08-05 00:00:00",
+      "ticker": "002355.SZ",
+      "name": "兴民智通",
+      "has_houyi": false,
+      "has_whale": false,
+      "composite_score": 3
+    },
+    {
+      "is_squeezed": false,
+      "energy_level": 0,
+      "momentum": 4.548332850138346,
+      "prev_momentum": 2.7616659800211587,
+      "squeeze_on": false,
+      "fired": true,
+      "Signal": "強烈買入 (爆發)",
+      "Close": 44.709999084472656,
+      "timestamp": "2026-08-05 00:00:00",
+      "ticker": "300139.SZ",
+      "name": "晓程科技",
+      "has_houyi": false,
+      "has_whale": false,
+      "composite_score": 3
+    },
+    {
+      "is_squeezed": true,
+      "energy_level": 0,
+      "momentum": 0.46500047047932946,
+      "prev_momentum": 0.39666700363159174,
+      "squeeze_on": true,
+      "fired": false,
+      "Signal": "買入 (動能增強)",
+      "Close": 12.5,
+      "timestamp": "2026-08-05 00:00:00",
+      "ticker": "300654.SZ",
+      "name": "世纪天鸿",
+      "has_houyi": false,
+      "has_whale": false,
+      "composite_score": 2
+    },
+    {
+      "is_squeezed": false,
+      "energy_level": 0,
+      "momentum": 1.1050004959106445,
+      "prev_momentum": 0.2350006103515625,
+      "squeeze_on": false,
+      "fired": true,
+      "Signal": "強烈買入 (爆發)",
+      "Close": 21.489999771118164,
+      "timestamp": "2026-08-05 00:00:00",
+      "ticker": "301026.SZ",
+      "name": "浩通科技",
+      "has_houyi": false,
+      "has_whale": false,
+      "composite_score": 3
+    }
+  ]
+}
