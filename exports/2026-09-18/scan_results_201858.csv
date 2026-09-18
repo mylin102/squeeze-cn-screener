@@ -1,0 +1,8 @@
+is_squeezed,energy_level,momentum,prev_momentum,squeeze_on,fired,Signal,Close,timestamp,ticker,name,has_houyi,has_whale,composite_score
+True,1,1.04608154296875,-0.7028656005859373,True,False,買入 (動能增強),160.0,2026-09-18 00:00:00,603259.SS,WuXi AppTec,False,False,2
+True,0,-0.01666673024495443,0.061666647593180315,True,False,賣出 (動能轉弱),11.699999809265137,2026-09-18 00:00:00,000001.SZ,Ping An Bank,False,False,0
+True,0,-1.0449994405110676,-0.6966667175292969,True,False,賣出 (動能轉弱),84.4000015258789,2026-09-18 00:00:00,000333.SZ,Midea Group,False,False,0
+False,0,-0.9933331807454426,-0.8683331807454426,False,True,強烈賣出 (跌破),38.47999954223633,2026-09-18 00:00:00,002230.SZ,iFLYTEK,False,False,0
+True,0,1.589457193917898e-07,0.0800002415974935,True,False,觀望 (動能減弱),9.069999694824219,2026-09-18 00:00:00,600000.SS,Shanghai Pudong Development Bank,False,False,0
+True,0,0.009999910990397135,0.1116666793823242,True,False,觀望 (動能減弱),26.600000381469727,2026-09-18 00:00:00,600887.SS,Yili,False,False,0
+True,0,-0.003333409627278648,0.05333328247070311,True,False,賣出 (動能轉弱),6.809999942779541,2026-09-18 00:00:00,601288.SS,Agricultural Bank of China,False,False,0
