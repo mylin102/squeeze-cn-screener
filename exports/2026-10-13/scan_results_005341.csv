@@ -1,0 +1,9 @@
+is_squeezed,energy_level,momentum,prev_momentum,squeeze_on,fired,Signal,Close,timestamp,ticker,name,has_houyi,has_whale,composite_score
+True,0,-0.05525430043538411,-0.0755170186360677,True,False,觀察 (跌勢收斂),11.59000015258789,2026-10-09 00:00:00,000001.SZ,Ping An Bank,False,False,1
+True,0,-0.23833338419596353,-0.4166673024495442,True,False,觀察 (跌勢收斂),38.83000183105469,2026-10-09 00:00:00,000651.SZ,Gree Electric,False,False,1
+True,0,-2.121666590372721,-2.2349999745686846,True,False,觀察 (跌勢收斂),47.849998474121094,2026-10-09 00:00:00,002812.SZ,Yunnan Energy New Material,False,False,1
+True,0,-0.09499994913736978,-0.16166655222574872,True,False,觀察 (跌勢收斂),14.899999618530273,2026-10-09 00:00:00,300498.SZ,Wens Foodstuffs,False,False,1
+True,0,-0.2533346811930339,-0.3850015004475911,True,False,觀察 (跌勢收斂),41.41999816894531,2026-10-09 00:00:00,600036.SS,China Merchants Bank,False,False,1
+True,0,0.04333329200744629,0.03333330154418945,True,False,買入 (動能增強),6.980000019073486,2026-10-09 00:00:00,601288.SS,Agricultural Bank of China,False,False,2
+True,0,0.12499992052714032,0.12999995549519855,True,False,觀望 (動能減弱),8.220000267028809,2026-10-09 00:00:00,601398.SS,Industrial and Commercial Bank of China,False,False,0
+True,0,-0.7083346048990886,-0.6300010681152344,True,False,賣出 (動能轉弱),33.66999816894531,2026-10-09 00:00:00,603288.SS,Foshan Haitian,True,False,1
