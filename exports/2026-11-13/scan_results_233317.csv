@@ -1,0 +1,8 @@
+is_squeezed,energy_level,momentum,prev_momentum,squeeze_on,fired,Signal,Close,timestamp,ticker,name,has_houyi,has_whale,composite_score
+True,0,0.3466666539510091,0.5850003560384114,True,False,觀望 (動能減弱),28.059999465942383,2026-11-13 00:00:00,000063.SZ,ZTE,False,False,0
+True,0,0.6166636149088541,2.77166493733724,True,False,觀望 (動能減弱),198.27999877929688,2026-11-13 00:00:00,300033.SZ,Hithink RoyalFlush,False,False,0
+True,0,0.5883331298828125,0.4583333333333333,True,False,買入 (動能增強),42.93000030517578,2026-11-13 00:00:00,600036.SS,China Merchants Bank,False,False,2
+True,0,-0.09333356221516927,-0.010000228881835965,True,False,賣出 (動能轉弱),17.850000381469727,2026-11-13 00:00:00,600585.SS,Anhui Conch Cement,False,False,0
+True,0,-0.021666606267293293,-0.016716559727986652,True,False,賣出 (動能轉弱),7.369999885559082,2026-11-13 00:00:00,601288.SS,Agricultural Bank of China,False,False,0
+True,0,0.09999990463256836,0.03851668039957683,True,False,買入 (動能增強),8.850000381469727,2026-11-13 00:00:00,601398.SS,Industrial and Commercial Bank of China,False,False,2
+True,0,4.944999694824219,5.428332010904947,True,False,觀望 (動能減弱),146.3000030517578,2026-11-13 00:00:00,603259.SS,WuXi AppTec,False,False,0
